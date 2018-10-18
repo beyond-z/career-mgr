@@ -106,11 +106,12 @@ RSpec.describe Admin::FellowsController, type: :controller do
     end
   end
 
-  describe "GET #resume.json" do
+  describe "GET #resumes.json" do
     let(:fellow) { create :fellow, resume_url: resume_url }
     
     before do
-      fellow.resume.attach fixture_file_upload('files/resume.pdf') if attached_status
+      allow_any_instance_of(Fellow).to receive(:get_portal_resumes).and_return(nil)
+      fellow.resumes.attach fixture_file_upload('files/resume.pdf') if attached_status
     end
     
     describe 'when resume is attached' do
@@ -118,22 +119,11 @@ RSpec.describe Admin::FellowsController, type: :controller do
       let(:resume_url) { 'http://example.com/linked.pdf' }
 
       it "returns the attached resume url" do
-        get :resume, params: {id: fellow.to_param, format: 'json'}
+        get :resumes, params: {id: fellow.to_param, format: 'json'}
         data = JSON.parse(response.body)
         
-        expect(data['url']).to eq(Rails.application.routes.url_helpers.url_for(fellow.resume))
-      end
-    end
-    
-    describe 'when resume is not attached, but resume_url is set' do
-      let(:attached_status) { false }
-      let(:resume_url) { 'http://example.com/linked.pdf' }
-
-      it "returns the linked resume_url" do
-        get :resume, params: {id: fellow.to_param, format: 'json'}
-        data = JSON.parse(response.body)
-        
-        expect(data['url']).to eq(resume_url)
+        expect(data['resumes'].first['url']).to eq(Rails.application.routes.url_helpers.url_for(fellow.resumes.first))
+        expect(data['resumes'].first['name']).to eq('resume.pdf')
       end
     end
     
@@ -142,7 +132,7 @@ RSpec.describe Admin::FellowsController, type: :controller do
       let(:resume_url) { nil }
 
       it "returns the linked resume_url" do
-        get :resume, params: {id: fellow.to_param, format: 'json'}
+        get :resumes, params: {id: fellow.to_param, format: 'json'}
         data = JSON.parse(response.body)
         
         expect(data['url']).to eq(nil)
@@ -205,7 +195,7 @@ RSpec.describe Admin::FellowsController, type: :controller do
         fellow = Fellow.create! valid_attributes
         put :update, params: {id: fellow.to_param, fellow: new_attributes.merge(resume: resume)}, session: valid_session
         
-        expect(fellow.reload.resume.attached?).to eq(true)
+        expect(fellow.reload.resumes.size).to eq(1)
       end
 
       it "updates the opportunity types" do

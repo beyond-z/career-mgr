@@ -524,26 +524,6 @@ RSpec.describe Fellow, type: :model do
     end
   end
   
-  describe '#get_portal_resume_url' do
-    let(:fellow) { build :fellow, portal_course_id: portal_course_id, portal_user_id: portal_user_id }
-    let(:portal_course_id) { 11 }
-    let(:portal_user_id) { 12 }
-    let(:assignment_id) { 387 }
-    let(:token) { Rails.application.secrets.canvas_access_token }
-    let(:submission_url) { "https://stagingportal.bebraven.org/api/v1/courses/11/assignments/387/submissions/12?access_token=#{token}" }
-    let(:submission_fixture) { File.read("#{Rails.root}/spec/fixtures/portal_submission_resume.json")}
-
-    before do
-      allow(fellow).to receive(:get_portal_assignment_id).with('resume', 'hustle to career project').and_return(assignment_id)
-      allow(fellow).to receive(:open_url).with(submission_url).and_return(submission_fixture)
-      allow(fellow).to receive(:canvas_url).and_return("https://stagingportal.bebraven.org")
-    end
-    
-    subject { fellow.get_portal_resume_url }
-    
-    it { should eq('http://example.com/resume.doc') }
-  end
-  
   describe '#get_portal_assignment_id(assignment_name)' do
     let(:fellow) { build :fellow, portal_course_id: portal_course_id }
     let(:portal_course_id) { 42 }
@@ -570,34 +550,6 @@ RSpec.describe Fellow, type: :model do
     describe 'when looking for linkedin assignment' do
       let(:assignment_name) { 'LinkedIn' }
       it { should eq(389) }
-    end
-  end
-  
-  describe '#resume_url' do
-    let(:fellow) { create :fellow, resume_url: resume_url }
-    let(:server_answer) { 'http://example.com/resume.pdf' }
-    
-    before do
-      allow(fellow).to receive(:get_portal_resume_url).and_return(server_answer)
-      allow(fellow).to receive(:canvas_url).and_return("https://stagingportal.bebraven.org")
-    end
-    
-    subject { fellow.resume_url }
-    
-    describe 'when resume_url is set in the database' do
-      let(:resume_url) { 'http://example.com/resume_saved.pdf' }
-      it { should eq(resume_url) }
-    end
-    
-    describe 'when resume_url is not set in the database' do
-      let(:resume_url) { nil }
-      
-      it { should eq(server_answer) }
-      
-      it "saves the result to the database" do
-        subject
-        expect(fellow.reload.attributes['resume_url']).to eq(server_answer)
-      end
     end
   end
   

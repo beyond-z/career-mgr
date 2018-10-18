@@ -175,8 +175,7 @@ class Fellow < ApplicationRecord
     "#{canvas_url}/courses/#{portal_course_id}/pages/#{page_name}"
   end
   
-  def get_portal_resume_url
-    return @portal_resume_url if defined?(@portal_resume_url)
+  def get_portal_resumes
     return nil if portal_course_id.nil? || portal_user_id.nil? || portal_resume_assignment_id.to_i == 0
     
     url = "#{canvas_url}/api/v1/courses/#{portal_course_id}/assignments/#{portal_resume_assignment_id}/submissions/#{portal_user_id}?access_token=#{Rails.application.secrets.canvas_access_token}"
@@ -185,7 +184,9 @@ class Fellow < ApplicationRecord
       response = open_url(url)
       data = JSON.parse(response)
       
-      @portal_resume_url = data['attachments'].detect{|a| a.has_key?('url')}['url']
+      data['attachments'].select{|a| a.has_key?('url')}.each do |resume|
+        resumes.attach(io: open(resume['url']), filename: resume['filename'])
+      end
     rescue
       nil
     end
@@ -235,15 +236,6 @@ class Fellow < ApplicationRecord
     end
     
     assignment_id || 0
-  end
-  
-  def resume_url
-    return attributes['resume_url'] if attributes['resume_url']
-    
-    new_url = get_portal_resume_url
-    self.update resume_url: new_url unless new_url.nil?
-
-    attributes['resume_url']
   end
   
   def portal_course_id

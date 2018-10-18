@@ -62,13 +62,16 @@ $(document).on "turbolinks:load",  ->
       resume = $(this)
       id = resume.data('fellow')
       
-      $.get "/admin/fellows/#{id}/resume.json", (data) ->
-        url = data['url']
+      $.get "/admin/fellows/#{id}/resumes.json", (data) ->
+        resumes = data['resumes']
         
-        if url == null
+        if resumes.length  == 0
           resume.html('')
         else
-          resume.html("<a href=\"#{data['url']}\" target=\"_blank\">view</a>")
+          linker = (attachment) -> "<a href=\"#{attachment['url']}\" target=\"_blank\">#{attachment['name']}</a>"
+          links = (linker attachment for attachment in resumes)
+          
+          resume.html(links.join(', '))
           resume.removeClass('faded')
       .fail ->
         resume.html('')
