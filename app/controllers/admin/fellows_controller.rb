@@ -16,14 +16,10 @@ class Admin::FellowsController < ApplicationController
   
   # GET /fellows/1/resume.json
   def resume
-    url = if @fellow.resume.attached?
-      Rails.application.routes.url_helpers.url_for(@fellow.resume)
-    else
-      @fellow.resume_url
-    end
+    urls = @fellow.resumes.map{|resume| Rails.application.routes.url_helpers.url_for(resume)}
     
     respond_to do |format|
-      format.json { render json: {url: url}}
+      format.json { render json: {urls: urls}}
     end
   end
 
