@@ -107,7 +107,7 @@ RSpec.describe Admin::FellowsController, type: :controller do
   end
 
   describe "GET #resumes.json" do
-    let(:fellow) { create :fellow, resume_url: resume_url }
+    let(:fellow) { create :fellow }
     
     before do
       allow_any_instance_of(Fellow).to receive(:get_portal_resumes).and_return(nil)
@@ -116,7 +116,6 @@ RSpec.describe Admin::FellowsController, type: :controller do
     
     describe 'when resume is attached' do
       let(:attached_status) { true }
-      let(:resume_url) { 'http://example.com/linked.pdf' }
 
       it "returns the attached resume url" do
         get :resumes, params: {id: fellow.to_param, format: 'json'}
@@ -124,18 +123,6 @@ RSpec.describe Admin::FellowsController, type: :controller do
         
         expect(data['resumes'].first['url']).to eq(Rails.application.routes.url_helpers.url_for(fellow.resumes.first))
         expect(data['resumes'].first['name']).to eq('resume.pdf')
-      end
-    end
-    
-    describe 'when there is no resume attached, OR resume_url set' do
-      let(:attached_status) { false }
-      let(:resume_url) { nil }
-
-      it "returns the linked resume_url" do
-        get :resumes, params: {id: fellow.to_param, format: 'json'}
-        data = JSON.parse(response.body)
-        
-        expect(data['url']).to eq(nil)
       end
     end
   end
