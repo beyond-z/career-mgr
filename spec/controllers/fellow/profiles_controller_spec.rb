@@ -71,7 +71,7 @@ RSpec.describe Fellow::ProfilesController, type: :controller do
       
       it "attaches the resume" do
         put :update, params: {fellow: {resume: resume}}, session: valid_session
-        expect(fellow.reload.resume).to be_attached
+        expect(fellow.reload.resumes.size).to eq(1)
       end
     end
 

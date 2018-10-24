@@ -94,13 +94,11 @@ module ApplicationHelper
     address_parts(contact).join('<br>').html_safe
   end
   
-  def resume_link fellow
-    if !fellow.respond_to?(:resume)
+  def resume_links fellow
+    if !fellow.respond_to?(:resumes)
       ''
-    elsif fellow.resume.attached?
-      link_to('view', url_for(fellow.resume), target: '_blank').html_safe
-    elsif fellow.attributes['resume_url']
-      link_to('view', fellow.resume_url, target: '_blank').html_safe
+    elsif fellow.resumes.attached?
+      fellow.resumes.map{|r| link_to(r.filename, url_for(r), target: '_blank')}.join(', ').html_safe
     else
       "<div class=\"fellow-resume-url faded\" data-fellow=\"#{fellow.id}\">searching...</div>".html_safe
     end
