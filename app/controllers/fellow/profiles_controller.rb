@@ -11,6 +11,7 @@ class Fellow::ProfilesController < ApplicationController
 
   def update
     if @fellow.update(fellow_params)
+      @fellow.resumes.attach(params[:fellow][:resume]) unless params[:fellow][:resume].blank?
       redirect_to fellow_profile_path, notice: 'Your profile was successfully updated.'
     else
       render :edit
@@ -26,7 +27,7 @@ class Fellow::ProfilesController < ApplicationController
   def fellow_params
     params.require(:fellow).permit(
       :key, :first_name, :last_name, :graduation_year, :graduation_semester,
-      :major, :affiliations, :linkedin_url, :receive_opportunities, :resume,
+      :major, :affiliations, :linkedin_url, :receive_opportunities,
       :employment_status_id, :industry_tags, :interest_tags, :major_tags, :metro_tags, :industry_interest_tags,
       opportunity_type_ids: [], industry_ids: [], interest_ids: [], metro_ids: [],
       contact_attributes: [:id, :address_1, :address_2, :city, :state, :postal_code, :phone, :email, :url]

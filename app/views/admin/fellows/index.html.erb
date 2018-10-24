@@ -1,6 +1,6 @@
 <h1>Fellows</h1>
 
-<table class="fellows">
+<table class="fellows wide">
   <thead>
     <tr>
       <th>ID</th>
@@ -25,7 +25,7 @@
         <td><%= fellow.gpa || 'N/A' %></td>
         <td><%= fellow.efficacy_score || 'N/A' %></td>
         <td><%= fellow.employment_status.name %></td>
-        <td><%= resume_link(fellow) %></td>
+        <td><%= resume_links(fellow) %></td>
         <td><%= link_to 'Edit', edit_admin_fellow_path(fellow), class: 'edit' %></td>
         <td><%= link_to 'Delete', admin_fellow_path(fellow), method: :delete, data: { confirm: 'Are you sure?' }, class: 'delete' %></td>
       </tr>

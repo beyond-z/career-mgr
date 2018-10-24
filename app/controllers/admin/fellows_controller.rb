@@ -1,7 +1,7 @@
 class Admin::FellowsController < ApplicationController
   before_action :authenticate_user!
   before_action :ensure_admin!, except: [:resume]
-  before_action :set_fellow, only: [:show, :edit, :update, :destroy, :resume]
+  before_action :set_fellow, only: [:show, :edit, :update, :destroy, :resumes]
 
   # GET /fellows
   # GET /fellows.json
@@ -15,15 +15,15 @@ class Admin::FellowsController < ApplicationController
   end
   
   # GET /fellows/1/resume.json
-  def resume
-    url = if @fellow.resume.attached?
-      Rails.application.routes.url_helpers.url_for(@fellow.resume)
-    else
-      @fellow.resume_url
+  def resumes
+    if @fellow.resumes.empty?
+      @fellow.get_portal_resumes
     end
     
+    resumes = @fellow.resumes.map{|resume| {name: resume.filename, url: Rails.application.routes.url_helpers.url_for(resume)}}
+    
     respond_to do |format|
-      format.json { render json: {url: url}}
+      format.json { render json: {resumes: resumes}}
     end
   end
 
@@ -59,6 +59,8 @@ class Admin::FellowsController < ApplicationController
   def update
     respond_to do |format|
       if @fellow.update(fellow_params)
+        @fellow.resumes.attach params[:fellow][:resume] unless params[:fellow][:resume].blank?
+        
         format.html { redirect_to admin_fellows_path, notice: 'Fellow was successfully updated.' }
         format.json { render :show, status: :ok, location: @fellow }
       else
@@ -108,7 +110,7 @@ class Admin::FellowsController < ApplicationController
         :key, :first_name, :last_name, :graduation_year, :graduation_semester, :graduation_fiscal_year, 
         :interests_description, :major, :affiliations, :gpa, :linkedin_url, :staff_notes, :efficacy_score, 
         :employment_status_id, :industry_tags, :interest_tags, :metro_tags, :major_tags, :industry_interest_tags,
-        :resume, :receive_opportunities,
+        :receive_opportunities,
         opportunity_type_ids: [], industry_ids: [], interest_ids: [], metro_ids: [],
         contact_attributes: [:id, :address_1, :address_2, :city, :state, :postal_code, :phone, :email, :url]
       )

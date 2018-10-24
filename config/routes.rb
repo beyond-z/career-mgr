@@ -63,7 +63,7 @@ Rails.application.routes.draw do
       end
       
       member do
-        get :resume
+        get :resumes
       end
     end
 
