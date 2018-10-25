@@ -10,7 +10,7 @@ class Opportunity < ApplicationRecord
   has_many :tasks, as: :taskable, dependent: :destroy
   accepts_nested_attributes_for :tasks, reject_if: :all_blank, allow_destroy: true
   
-  has_many :fellow_opportunities
+  has_many :fellow_opportunities, dependent: :destroy
   has_many :fellows, through: :fellow_opportunities
   
   taggable :industries, :interests, :majors, :industry_interests, :metros
