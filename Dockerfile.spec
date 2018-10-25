@@ -1,4 +1,4 @@
-FROM ruby:2.4
+FROM ruby:2.4.4
 
 RUN apt-get update -yqq
 RUN apt-get install -yqq --no-install-recommends nodejs
