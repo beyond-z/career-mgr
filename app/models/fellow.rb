@@ -5,6 +5,7 @@ require 'taggable'
 require 'open-uri'
 
 class Fellow < ApplicationRecord
+  acts_as_paranoid
   include Taggable
 
   has_one :contact, as: :contactable, dependent: :destroy
