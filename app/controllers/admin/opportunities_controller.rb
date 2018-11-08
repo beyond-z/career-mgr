@@ -97,7 +97,7 @@ class Admin::OpportunitiesController < ApplicationController
   end
   
   def unpaginated_opportunities
-    (@employer ? @employer.opportunities : Opportunity).where(id: params[:export_ids]).prioritized.sort_by{|o| o.region.position}
+    (@employer ? @employer.opportunities : Opportunity).where(id: params[:export_ids]).prioritized.sort_by{|o| o.application_deadline || 10.years.from_now}
   end
   
   # Use callbacks to share common setup or constraints between actions.
