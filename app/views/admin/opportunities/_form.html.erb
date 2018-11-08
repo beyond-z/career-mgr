@@ -17,7 +17,12 @@
   </div>
 
   <div class="field">
-    <%= form.label :referral_email, 'Referral Contact E-mail' %>
+    <%= label_tag 'should_refer', "Should fellows contact Braven staff for a referral?" %>
+    <%= check_box_tag 'should_refer', 1, opportunity.referral_email.present? %>
+  </div>
+
+  <div id="referral_input" class="field">
+    <%= form.label :referral_email, 'E-mail of Braven staff member' %>
     <%= form.text_field :referral_email %>
   </div>
 
