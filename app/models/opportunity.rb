@@ -30,7 +30,7 @@ class Opportunity < ApplicationRecord
   
   class << self
     def csv_headers
-      ['Region', 'Employer', 'Position', 'Type', 'Location', 'Link', 'Employer Partner', 'Inbound', 'Recurring', 'Interests']
+      ['Region', 'Employer', 'Position', 'Type', 'Referral Contact', 'Location', 'Link', 'Employer Partner', 'Inbound', 'Recurring', 'Interests']
     end
   end
   
@@ -178,6 +178,7 @@ class Opportunity < ApplicationRecord
         employer.name,
         name,
         opportunity_type.name,
+        referral_email,
         primary_city_state,
         job_posting_url,
         (employer.employer_partner ? 'yes' : 'no'),
@@ -231,6 +232,10 @@ class Opportunity < ApplicationRecord
     value += 10 if published?
     
     value
+  end
+  
+  def publish!
+    update published: true
   end
   
   def unpublish!

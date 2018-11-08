@@ -13,7 +13,7 @@ class Admin::OpportunitiesController < ApplicationController
     respond_to do |format|
       format.csv do
         @opportunities = unpaginated_opportunities
-        Opportunity.where(id: @opportunities.map(&:id)).update_all(published: true)
+        @opportunities.each(&:publish!)
     
         headers['Content-Disposition'] = "attachment; filename=\"opportunities.csv\""
         headers['Content-Type'] ||= 'text/csv'
