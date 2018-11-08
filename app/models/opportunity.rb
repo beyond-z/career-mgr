@@ -184,7 +184,7 @@ class Opportunity < ApplicationRecord
         (employer.employer_partner ? 'yes' : 'no'),
         (inbound ? 'yes' : 'no'),
         (recurring ? 'yes' : 'no'),
-        (interests + industries + majors).map(&:name).uniq.sort.join(', ')
+        (interests + industries).map(&:name).uniq.sort.join(', ')
       ]
     # rescue => e
     #   Rails.logger.info("COULD NOT EXPORT OPP #{id}: #{e.message}")

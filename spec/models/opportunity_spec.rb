@@ -386,7 +386,7 @@ RSpec.describe Opportunity, type: :model do
     it { expect(subject[7]).to eq('yes') }
     it { expect(subject[8]).to eq('no') }
     it { expect(subject[9]).to eq('yes') }
-    it { expect(subject[10]).to eq("Industry, Interest, Major") }
+    it { expect(subject[10]).to eq("Industry, Interest") }
   end
   
   describe '#priority' do
