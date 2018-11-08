@@ -13,7 +13,6 @@ class Admin::OpportunitiesController < ApplicationController
     respond_to do |format|
       format.csv do
         @opportunities = unpaginated_opportunities
-        Rails.logger.info("OPPS: #{@opportunities.inspect}")
         Opportunity.where(id: @opportunities.map(&:id)).update_all(published: true)
     
         headers['Content-Disposition'] = "attachment; filename=\"opportunities.csv\""
