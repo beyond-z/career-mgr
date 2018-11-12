@@ -5,6 +5,8 @@
 # tagsInput jQuery plugin: https://github.com/underovsky/jquery-tagsinput-revisited
 
 $(document).on "turbolinks:load",  ->
+  lastReferralValue = ''
+  
   enableTagChecklistToggle = (name, listUrl, placeholder) ->
     element = $("#opportunity_#{name}_tags")
     
@@ -133,7 +135,19 @@ $(document).on "turbolinks:load",  ->
     $('input.location[type="checkbox"]').change (event) ->
       if (this.checked)
         add_metro_tag($(this).data('zip'))
+        
+  reset_referral_contact = () ->
+    if $('#should_refer').prop('checked')
+      $('#referral_input').removeClass('form-disabled')
 
+      if lastReferralValue.length > 0
+        $('#referral_input input').val(lastReferralValue)
+    else
+      $('#referral_input').addClass('form-disabled')
+      
+      lastReferralValue = $('#referral_input input').val()
+      $('#referral_input input').val('')
+ 
   $('a.new_location').click (event) ->
     event.preventDefault()
 
@@ -146,8 +160,11 @@ $(document).on "turbolinks:load",  ->
   $('.toggle-next').click (e) ->
     e.preventDefault();
     $(this).next().toggleClass('collapsed');
-
+    
+  $('#should_refer').click (e) ->
+    reset_referral_contact()
 
   reset_datepicker()
   reset_removeable()
   reset_zip_match()
+  reset_referral_contact()

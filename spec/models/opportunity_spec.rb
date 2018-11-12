@@ -116,7 +116,7 @@ RSpec.describe Opportunity, type: :model do
   
   describe '#csv_headers' do
     subject { Opportunity.csv_headers }
-    it { should eq(['Region', 'Employer', 'Position', 'Type', 'Location', 'Link', 'Employer Partner', 'Inbound', 'Recurring', 'Interests'])}
+    it { should eq(['Region', 'Employer', 'Position', 'Type', 'Referral Contact', 'Location', 'Link', 'Employer Partner', 'Inbound', 'Recurring', 'Interests'])}
   end
   
   ##################
@@ -353,7 +353,7 @@ RSpec.describe Opportunity, type: :model do
   
   describe '#csv_fields' do
     let(:employer) { create :employer, employer_partner: true}
-    let(:opportunity) { create :opportunity, employer: employer, inbound: false, recurring: true, job_posting_url: 'http://example.com', name: 'CSV Opp' }
+    let(:opportunity) { create :opportunity, employer: employer, inbound: false, recurring: true, job_posting_url: 'http://example.com', name: 'CSV Opp', referral_email: 'test@example.com' }
 
     let(:fellow) { create :fellow }
     let(:interest) { create :interest, name: 'Interest' }
@@ -380,12 +380,13 @@ RSpec.describe Opportunity, type: :model do
     it { expect(subject[1]).to eq(opportunity.employer.name) }
     it { expect(subject[2]).to eq(opportunity.name) }
     it { expect(subject[3]).to eq(opportunity.opportunity_type.name) }
-    it { expect(subject[4]).to eq('Omaha, NE') }
-    it { expect(subject[5]).to eq(opportunity.job_posting_url) }
-    it { expect(subject[6]).to eq('yes') }
-    it { expect(subject[7]).to eq('no') }
-    it { expect(subject[8]).to eq('yes') }
-    it { expect(subject[9]).to eq("Industry, Interest, Major") }
+    it { expect(subject[4]).to eq('test@example.com') }
+    it { expect(subject[5]).to eq('Omaha, NE') }
+    it { expect(subject[6]).to eq(opportunity.job_posting_url) }
+    it { expect(subject[7]).to eq('yes') }
+    it { expect(subject[8]).to eq('no') }
+    it { expect(subject[9]).to eq('yes') }
+    it { expect(subject[10]).to eq("Industry, Interest") }
   end
   
   describe '#priority' do
@@ -488,6 +489,20 @@ RSpec.describe Opportunity, type: :model do
       describe 'when none are true' do
         it { should eq(6) }
       end
+    end
+  end
+  
+  describe '#publish!' do
+    subject { opportunity.publish!; opportunity.reload.published }
+    
+    describe 'when opp is already published' do
+      let(:opportunity) { create :opportunity, published: true }
+      it { should eq(true) }
+    end
+
+    describe 'when opp is unpublished' do
+      let(:opportunity) { create :opportunity, published: false }
+      it { should eq(true) }
     end
   end
   

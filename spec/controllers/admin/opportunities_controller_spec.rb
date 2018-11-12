@@ -109,6 +109,16 @@ RSpec.describe Admin::OpportunitiesController, type: :controller do
       post :export, params: {format: 'csv'}, session: valid_session
       expect(response).to be_successful
     end
+    
+    it "marks opportunities as publishd" do
+      opportunity = create :opportunity, published: false
+      
+      post :export, params: {export_ids: [opportunity.id], format: 'csv'}, session: valid_session
+      opportunity.reload
+      
+      expect(opportunity).to be_published
+      expect(opportunity.priority).to eq(opportunity.calculated_priority)
+    end
   end
 
   describe "GET #show" do
