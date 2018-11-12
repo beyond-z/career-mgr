@@ -21,7 +21,7 @@ class CustomCasController < ApplicationController
       user ||= User.create(:email => sso_user)
       sign_in('user', user)
 
-      follow_redirect
+      redirect_to(follow_redirect || root_path)
     else
       Rails.logger.info("not valid #{is_nlu} #{st.failure_code}")
       render plain: "Your login was not valid. Please try again."
