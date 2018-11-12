@@ -1,6 +1,8 @@
 Rails.application.routes.draw do
   default_url_options Rails.application.config.action_mailer.default_url_options
 
+  get 'users/service', to: 'custom_cas#service'
+
   devise_for :users, controllers: { confirmations: 'confirmations', sessions: 'sessions', passwords: 'passwords' }
   
   match "/split" => Split::Dashboard, anchor: false, via: [:get, :post, :delete], constraints: ->(request) do
