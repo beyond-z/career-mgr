@@ -1,6 +1,6 @@
 require 'casclient'
 
-class CustomCasController < ActionController::Base
+class CustomCasController < ApplicationController
   def index
     service = URI.encode("#{request.base_url}/users/service")
     redirect_to "#{Rails.application.secrets.nlu_sso_url}login?service=#{service}"
