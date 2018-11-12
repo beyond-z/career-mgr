@@ -680,3 +680,7 @@ ul.response-links li {
     width: 672px;
   }
 }
+
+.form-disabled {
+  display: none;
+}
