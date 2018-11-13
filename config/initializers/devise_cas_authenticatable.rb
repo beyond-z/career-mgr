@@ -22,8 +22,8 @@ ActionDispatch::Routing::Mapper.class_eval do
     sign_out_via = (Devise.respond_to?(:sign_out_via) && Devise.sign_out_via) || [:get, :post]
 
     # service endpoint for CAS server
-    get 'service', :to => "#{controllers[:cas_sessions]}#service", :as => 'service'
-    post 'service', :to => "#{controllers[:cas_sessions]}#single_sign_out", :as => 'single_sign_out'
+    get 'service_braven', :to => "#{controllers[:cas_sessions]}#service", :as => 'service_braven'
+    post 'service_out', :to => "#{controllers[:cas_sessions]}#single_sign_out", :as => 'single_sign_out'
 
     resource :session, :only => [], :controller => controllers[:cas_sessions], :path => '' do
       get :new, :path => mapping.path_names[:sign_in_sso], :as => 'new_sso'
