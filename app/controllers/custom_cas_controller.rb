@@ -7,7 +7,7 @@ class CustomCasController < ApplicationController
   end
 
   def service
-    is_nlu = request.referer.blank? ? (session[:sso] == Rails.application.secrets.nlu_sso_url) : (URI(request.referer).host == URI(Rails.application.secrets.nlu_sso_url).host)
+    is_nlu = true
     casclient = CASClient::Client.new(:cas_base_url => is_nlu ?
       Rails.application.secrets.nlu_sso_url : Rails.application.secrets.sso_url)
     st = CASClient::ServiceTicket.new(params[:ticket], "#{request.base_url}/users/service")
