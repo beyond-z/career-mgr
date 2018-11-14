@@ -1,7 +1,7 @@
 Rails.application.routes.draw do
   default_url_options Rails.application.config.action_mailer.default_url_options
 
-  get 'users/service', to: 'custom_cas#service'
+  get '/users/sign_in', to: 'home#login'
 
   devise_for :users, controllers: { confirmations: 'confirmations', sessions: 'sessions', passwords: 'passwords' }
   
@@ -17,6 +17,9 @@ Rails.application.routes.draw do
   get 'login', to: 'home#login'
   get 'sso/:id', to: 'home#sso', as: 'sso'
   get 'token/:id', to: 'token#show', as: 'token'
+
+  get 'users/service', to: 'home#service_nlu'
+  get 'users/service_braven', to: 'home#service_braven'
 
   get 'candidates/:fellow_opportunity_id/status', to: 'candidates#status', as: 'candidate_status'
   
