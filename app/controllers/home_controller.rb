@@ -66,7 +66,7 @@ class HomeController < ApplicationController
   def log_in_completion(sso_user)
     user = User.where(:email => sso_user).first
     user ||= User.create(:email => sso_user)
-    sign_in('user', user)
+    sign_in user
 
     redirect_to(session.delete(:last) || root_path)
   end
