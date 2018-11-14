@@ -3,7 +3,7 @@ require 'fellow_user_matcher'
 class User < ApplicationRecord
   ADMIN_DOMAIN_WHITELIST = ['bebraven.org']
   
-  devise :database_authenticatable, :cas_authenticatable, :registerable,
+  devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :trackable, :validatable
          
   has_one :fellow
