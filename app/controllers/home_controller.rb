@@ -1,5 +1,5 @@
 class HomeController < ApplicationController
-  before_action :authenticate_user!, except: [:health_check, :login, :sso]
+  before_action :authenticate_user!, except: [:health_check, :login, :sso, :service_braven, :service_nlu]
   
   def welcome
     case current_user.role
