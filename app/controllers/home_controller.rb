@@ -1,5 +1,3 @@
-require 'custom_devise_sessions_controller'
-
 class HomeController < ApplicationController
   before_action :authenticate_user!, except: [:health_check, :login, :sso]
   
