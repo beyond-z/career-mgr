@@ -6,6 +6,6 @@ class FellowMailer < ApplicationMailer
     @fellow = @token.owner
     @unsubscriber = @fellow
     
-    mail_subscribed(@fellow.receive_opportunities, to: @fellow.contact.email, subject: "#{@fellow.first_name} - Please update your profile")
+    mail_subscribed(@fellow.receive_opportunities, to: @fellow.contact.email, subject: "Please update your Braven profile to receive job opportunities.")
   end
 end
