@@ -38,6 +38,7 @@ Rails.application.routes.draw do
 
   namespace :admin do
     get 'home/welcome'
+    get 'home/stats'
     get 'home/new_opportunity', as: 'new_opportunity'
 
     resources :employers, shallow: true do
