@@ -4,8 +4,8 @@
   <tr><th>Pipeline Stage</th><th>User Count</th></tr>
   <% @res.each do |row| %>
     <tr>
-      <td><%= row[1] %></td>
-      <td><%= row[2] %></td>
+      <td><%= row["name"] %></td>
+      <td><%= row["user_count"] %></td>
     </tr>
   <% end %>
 </table>

@@ -9,7 +9,7 @@ class Admin::HomeController < ApplicationController
     # see: https://app.asana.com/0/11511088400507/937962981590809
     @res = ActiveRecord::Base.connection.execute("
       SELECT
-        opportunity_stages.id, opportunity_stages.name, COUNT(*) 
+        opportunity_stages.id, opportunity_stages.name AS name, COUNT(*) AS user_count
       FROM
         fellow_opportunities
       INNER JOIN
