@@ -1,0 +1,11 @@
+<h2>Current Pipeline Stats</h2>
+
+<table>
+  <tr><th>Pipeline Stage</th><th>User Count</th></tr>
+  <% @res.each do |row| %>
+    <tr>
+      <td><%= row[1] %></td>
+      <td><%= row[2] %></td>
+    </tr>
+  <% end %>
+</table>
