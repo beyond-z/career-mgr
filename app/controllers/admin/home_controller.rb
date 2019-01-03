@@ -23,6 +23,22 @@ class Admin::HomeController < ApplicationController
       ORDER BY
         opportunity_stages.id
     ")
+
+    @res_details = ActiveRecord::Base.connection.execute("
+      SELECT
+        opportunity_stages.name AS name, fellows.first_name AS fellow_first_name, fellows.last_name AS fellow_last_name
+      FROM
+        fellow_opportunities
+      INNER JOIN
+        fellows on fellow_id = fellows.id
+      INNER JOIN
+        opportunity_stages on opportunity_stages.id = opportunity_stage_id
+      WHERE
+        last_name NOT LIKE 'xTest%'
+      ORDER BY
+        opportunity_stages.id, fellows.last_name
+    ")
+
   end
   
   def new_opportunity
