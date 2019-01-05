@@ -43,6 +43,20 @@ services:
     
   redis-spec:
     image: redis
+    
+  solr:
+    image: solr:7.0.1
+    ports:
+      - "8983:8983"
+    volumes:
+      - solr-data:/opt/solr/server/solr/mycores
+    entrypoint:
+      - docker-entrypoint.sh
+      - solr-precreate
+      - mycore
+    links:
+      - database:database
 
 volumes:
   db-data:
+  solr-data: {}
