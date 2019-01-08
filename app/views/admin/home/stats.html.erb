@@ -14,11 +14,13 @@
 
 <p>This is sorted by stage and then by fellow last name.</p>
 <table>
-  <tr><th>Pipeline Stage</th><th>Fellow Name</th></tr>
+  <tr><th>Pipeline Stage</th><th>Fellow Name</th><th>Opportunity</th><th>Employer</th></tr>
   <% @res_details.each do |row| %>
     <tr>
       <td><%= row["name"] %></td>
       <td><%= row["fellow_first_name"] %> <%= row["fellow_last_name"] %></td>
+      <td><%= row["opp_name"] %></td>
+      <td><%= row["emp_name"] %></td>
     </tr>
   <% end %>
 </table>
