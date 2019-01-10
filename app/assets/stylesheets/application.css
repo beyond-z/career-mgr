@@ -687,6 +687,7 @@ ul.response-links li {
 
 input[type="text"].search-box {
   height: 28px;
+  width: 240px;
   font-size: 16px;
   padding-top: 0px;
 }
