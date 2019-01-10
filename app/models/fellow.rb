@@ -44,6 +44,14 @@ class Fellow < ApplicationRecord
   
   scope :receive_opportunities, -> { where(receive_opportunities: true) }
   
+  searchable do
+    text :first_name, :last_name
+    
+    text :email do
+      contact ? contact.email : ''
+    end
+  end
+  
   class << self
     def import contents
       CSV.new(contents, headers: true, skip_lines: /(Anticipated Graduation|STUDENT INFORMATION)/).each do |data|
@@ -277,6 +285,10 @@ class Fellow < ApplicationRecord
     rescue
       default
     end
+  end
+  
+  def simple_search query
+    Fellow.search{ fulltext query }.results
   end
   
   private
