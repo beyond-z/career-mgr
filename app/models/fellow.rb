@@ -47,6 +47,10 @@ class Fellow < ApplicationRecord
   searchable do
     text :first_name, :last_name
     
+    string :fullname do
+      full_name
+    end
+    
     text :email do
       contact ? contact.email : ''
     end
@@ -113,6 +117,16 @@ class Fellow < ApplicationRecord
     
     def ensure_float string
       (string || 0.0).to_f
+    end
+
+    def simple_search query
+      search = Fellow.search do
+        fulltext query
+    
+        order_by :fullname, :asc
+      end
+  
+      search.results
     end
   end
   
@@ -285,10 +299,6 @@ class Fellow < ApplicationRecord
     rescue
       default
     end
-  end
-  
-  def simple_search query
-    Fellow.search{ fulltext query }.results
   end
   
   private
