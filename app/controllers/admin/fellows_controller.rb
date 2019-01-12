@@ -7,7 +7,7 @@ class Admin::FellowsController < ApplicationController
   # GET /fellows.json
   def index
     @fellows = if params[:q]
-      Fellow.simple_search(params[:q])
+      Fellow.simple_search(params[:q]).paginate(page: params[:page])
     else
       Fellow.order(last_name: :asc, first_name: :asc).paginate(page: params[:page])
     end

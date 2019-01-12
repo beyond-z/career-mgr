@@ -7,6 +7,7 @@ ruby '2.4.4'
 gem 'rails', '~> 5.2.0'
 
 gem 'pg'
+gem 'pg_search'
 
 group :development, :test do
   # Use Puma as the app server
