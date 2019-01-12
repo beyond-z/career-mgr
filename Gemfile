@@ -100,4 +100,3 @@ gem 'aws-sdk-s3', require: false
 gem 'split', require: 'split/dashboard'
 gem 'rubyzip', '>= 1.2.2'
 gem 'ffi', '>= 1.9.25'
-gem 'sunspot_rails'
