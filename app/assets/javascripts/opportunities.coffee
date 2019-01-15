@@ -163,7 +163,13 @@ $(document).on "turbolinks:load",  ->
     
   $('#should_refer').click (e) ->
     reset_referral_contact()
-
+    
+  $('input[type=checkbox]#check-all-opportunities').click (event) ->
+    if $(this).is(':checked')
+      $('.opportunity-checkbox').prop('checked', true)
+    else
+      $('.opportunity-checkbox').prop('checked', false)
+      
   reset_datepicker()
   reset_removeable()
   reset_zip_match()

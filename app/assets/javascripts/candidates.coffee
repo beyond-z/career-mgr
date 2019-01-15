@@ -49,4 +49,9 @@ $(document).on "turbolinks:load",  ->
     else
       $(this).text('+ show advanced search')
       $('#advanced-search').hide();
-  
+
+  $('input[type=checkbox]#check-all-candidates').click (event) ->
+    if $(this).is(':checked')
+      $('.candidate-checkbox').prop('checked', true)
+    else
+      $('.candidate-checkbox').prop('checked', false)
