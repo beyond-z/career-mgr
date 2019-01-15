@@ -26,13 +26,17 @@ class Admin::HomeController < ApplicationController
 
     @res_details = ActiveRecord::Base.connection.execute("
       SELECT
-        opportunity_stages.name AS name, fellows.first_name AS fellow_first_name, fellows.last_name AS fellow_last_name
+        opportunity_stages.name AS name, fellows.first_name AS fellow_first_name, fellows.last_name AS fellow_last_name, opportunities.name AS opp_name, employers.name AS emp_name
       FROM
         fellow_opportunities
       INNER JOIN
         fellows on fellow_id = fellows.id
       INNER JOIN
         opportunity_stages on opportunity_stages.id = opportunity_stage_id
+      INNER JOIN
+        opportunities ON opportunities.id = fellow_opportunities.opportunity_id
+      INNER JOIN
+        employers ON opportunities.employer_id = employers.id
       WHERE
         last_name NOT LIKE 'xTest%'
       ORDER BY

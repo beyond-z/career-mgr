@@ -46,7 +46,7 @@
   <table id='candidate-list' class="fellows tablesorter wide">
     <thead>
       <tr>
-        <th></th>
+        <th><input type="checkbox" id="check-all-candidates"></th>
         <th>Name</th>
         <th>Graduation</th>
         <th>GPA</th>
@@ -62,7 +62,7 @@
       <% @candidates.each do |fellow| %>
         <tr>
           <td>
-            <%= check_box_tag 'candidate_ids[]', fellow.id, false, id: "candidate_ids_#{fellow.id}" %>
+            <%= check_box_tag 'candidate_ids[]', fellow.id, false, id: "candidate_ids_#{fellow.id}", class: 'candidate-checkbox' %>
           </td>
           <td><%= link_to fellow.full_name, admin_fellow_path(fellow) %></td>
           <td>

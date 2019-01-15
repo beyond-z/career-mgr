@@ -20,7 +20,9 @@
           <th>Inbound</th>
           <th>Recurring</th>
           <th>Actions</th>
-          <th class="numeric">Export</th>
+          <th class="numeric" style="white-space: nowrap">
+            Export <input type="checkbox" id="check-all-opportunities">
+          </th>
         </tr>
       </thead>
 
@@ -40,7 +42,7 @@
               <%= link_to 'Delete', admin_opportunity_path(opportunity), method: :delete, data: { confirm: 'Are you sure?' }, class: 'delete' %><br />
               <%= link_to('Unpublish', unpublish_admin_opportunity_path(opportunity), method: :put, class: 'edit') if opportunity.published? %>
             </td>
-            <td class="numeric"><%= check_box_tag 'export_ids[]', opportunity.id, !opportunity.published %></td>
+            <td class="numeric"><%= check_box_tag 'export_ids[]', opportunity.id, !opportunity.published, class: 'opportunity-checkbox' %></td>
           </tr>
         <% end %>
       </tbody>
