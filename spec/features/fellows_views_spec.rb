@@ -58,11 +58,10 @@ RSpec.feature "FellowViews", type: :feature do
     fill_in 'Email', with: contact_attributes[:email]
     fill_in 'Url', with: contact_attributes[:url]
 
-    expect_list_link_for 'industries/interests', link: 'full list', within: '#interests-collection'
     expect_list_link_for :metro_areas, link: 'full list', within: '#metros-collection'
-    
-    add_tag :fellow, :industry_interest, industry_included.name
-    add_tag :fellow, :industry_interest, interest_included.name
+    save_page("#{Rails.root}/tmp/capybara.html")
+    check label_for(industry_included.name, :fellow_industry_interest_names)
+    check label_for(interest_included.name, :fellow_industry_interest_names)
     add_tag :fellow, :metro, metro_included.name
 
     click_on 'Create Fellow'
@@ -119,7 +118,6 @@ RSpec.feature "FellowViews", type: :feature do
     updated_city = fellow.contact.city + 'x'
     fill_in 'City', with: updated_city
 
-    expect_list_link_for 'industries/interests/majors', link: 'full list', within: '#interests-collection'
     expect_list_link_for :metro_areas, link: 'full list', within: '#metros-collection'
 
     click_on 'Update Fellow'
