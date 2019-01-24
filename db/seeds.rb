@@ -20,6 +20,22 @@ if Metro.count == 0
   ])
 end
 
+if Region.count == 0
+  regions = Region.create([
+    {name: 'Newark, NJ', position: 0},
+    {name: 'San Jose, CA', position: 1},
+    {name: 'Chicago, IL', position: 2}
+  ])
+end
+
+if OpportunityType.count == 0
+  opportunity_types = OpportunityType.create([
+    {name: 'Job', position: 0},
+    {name: 'Internship', position: 1},
+    {name: 'Work Study', position: 2}
+  ])
+end
+
 lincoln_ne = Metro.find_by name: 'Lincoln, NE'
 
 fruits = ['Apples', 'Bananas', 'Carrots', 'Figs', 'Oranges', 'Raspberries', 'Strawberries']
@@ -38,14 +54,17 @@ fruits = ['Apples', 'Bananas', 'Carrots', 'Figs', 'Oranges', 'Raspberries', 'Str
   
   employer.industries << industry_accounting
   
-  3.times do
+  3.times do |i|
     fruit = fruits.shift
-    opportunity = employer.opportunities.create! name: fruit, description: "Buying and selling #{fruit}"
+    opp_type = OpportunityType.find_by position: i
+    reg = Region.find_by position: i
+    opportunity = employer.opportunities.create name: fruit, summary: "Buying and selling #{fruit}", opportunity_type: opp_type, region: reg, job_posting_url: "some_url@example.com"
 
     opportunity.industries << industry_accounting
     opportunity.interests << interest_accounting
     opportunity.locations << location
     opportunity.metros << lincoln_ne
+    opportunity.save!
   end
 end
 
