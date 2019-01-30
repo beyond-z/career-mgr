@@ -112,6 +112,14 @@ class Fellow < ApplicationRecord
     def ensure_float string
       (string || 0.0).to_f
     end
+    
+    def industry_interest_names
+      (Industry.pluck(:name) | Interest.pluck(:name)).sort
+    end
+    
+    def major_names
+      Major.order(name: :asc).pluck(:name)
+    end
   end
   
   def cohort
@@ -283,6 +291,23 @@ class Fellow < ApplicationRecord
     rescue
       default
     end
+  end
+  
+  def industry_interest_names
+    (industries.pluck(:name) | interests.pluck(:name)).sort
+  end
+  
+  def industry_interest_names= names
+    self.industries = Industry.where(name: names)
+    self.interests = Interest.where(name: names)
+  end
+  
+  def major_names
+    majors.order(name: :asc).pluck(:name)
+  end
+  
+  def major_names= names
+    self.majors = Major.where(name: names)
   end
   
   private

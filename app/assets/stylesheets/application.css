@@ -695,3 +695,14 @@ input[type="text"].search-box {
 input[type="submit"].search-box {
   
 }
+
+label.checkbox-multiline {
+  display: block;
+  margin-left: 20px;
+}
+
+input.checkbox-multiline {
+  float: left;
+  margin-left: 0;
+  margin-right: 8px;
+}

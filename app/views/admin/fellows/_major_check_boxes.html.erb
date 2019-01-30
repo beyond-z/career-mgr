@@ -1,0 +1,19 @@
+<% checkbox_columns = 2 %>
+<% column_width = (85 / checkbox_columns).to_s + '%' %>
+
+<div id="major-collection">
+  <h3>Majors/Minors</h3>
+
+  <% checkbox_columns.times do |column_index| %>
+    <p style="float: left; width: <%= column_width %>; margin-right: 40px;">
+      <% column_range(Fellow.major_names, checkbox_columns, column_index).each do |name| %>
+        <% tag_id = "fellow_major_names_#{name.downcase.gsub(/[^a-z0-9]+/, '')}" %>
+      
+        <%= check_box_tag("fellow[major_names][]", name, fellow.major_names.include?(name), id: tag_id, class: 'checkbox-multiline') %>
+        <%= label_tag(tag_id, name, class: 'checkbox-multiline') %>
+      <% end %>
+    </p>
+  <% end %>
+</div>
+
+<div style="clear: left;"></div>
