@@ -7,6 +7,7 @@ require 'open-uri'
 class Fellow < ApplicationRecord
   acts_as_paranoid
   include Taggable
+  include PgSearch
 
   has_one :contact, as: :contactable, dependent: :destroy
   accepts_nested_attributes_for :contact
@@ -43,6 +44,11 @@ class Fellow < ApplicationRecord
   after_save :attempt_fellow_match, if: :missing_user?
   
   scope :receive_opportunities, -> { where(receive_opportunities: true) }
+  
+  pg_search_scope :simple_search, against: {first_name: 'A', last_name: 'A'}, 
+                                  associated_against: {contact: {email: 'A'}},
+                                  order_within_rank: "fellows.last_name ASC, fellows.first_name ASC",
+                                  using: {tsearch: {any_word: true}}
   
   class << self
     def import contents
