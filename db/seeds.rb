@@ -42,6 +42,8 @@ fruits = ['Apples', 'Bananas', 'Carrots', 'Figs', 'Oranges', 'Raspberries', 'Str
 
 ['ABC Employer', 'DEF Employer'].each do |name|
   employer = Employer.create!(name: name)
+  job = OpportunityType.find_by name: 'Job'
+  nationwide = Region.find_by name: 'Nationwide'
 
   location = employer.locations.create(
     name: "#{employer.name} Headquarters",
@@ -56,9 +58,12 @@ fruits = ['Apples', 'Bananas', 'Carrots', 'Figs', 'Oranges', 'Raspberries', 'Str
   
   3.times do |i|
     fruit = fruits.shift
-    opp_type = OpportunityType.find_by position: i
-    reg = Region.find_by position: i
-    opportunity = employer.opportunities.create name: fruit, summary: "Buying and selling #{fruit}", opportunity_type: opp_type, region: reg, job_posting_url: "some_url@example.com"
+    opportunity = employer.opportunities.create! name: fruit, 
+                    summary: "Buying and selling #{fruit}", 
+                    opportunity_type: job,
+                    region: nationwide,
+                    job_posting_url: 'http://example.com',
+                    locations: [location]
 
     opportunity.industries << industry_accounting
     opportunity.interests << interest_accounting
