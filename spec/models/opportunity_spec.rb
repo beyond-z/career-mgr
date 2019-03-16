@@ -82,6 +82,18 @@ RSpec.describe Opportunity, type: :model do
   ########
   # Scopes
   ########
+  
+  describe 'active' do
+    let(:deadline_tomorrow) { create :opportunity, application_deadline: Date.tomorrow }
+    let(:deadline_today) { create :opportunity, application_deadline: Date.today }
+    let(:deadline_yesterday) { create :opportunity, application_deadline: Date.yesterday }
+    
+    subject { Opportunity.active }
+    
+    it { should include(deadline_tomorrow) }
+    it { should include(deadline_today) }
+    it { should_not include(deadline_yesterday) }
+  end
 
   describe 'prioritized' do
     let(:partner) { create :employer, employer_partner: true }

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_03_16_142242) do
+ActiveRecord::Schema.define(version: 2019_03_16_143026) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -374,8 +374,8 @@ ActiveRecord::Schema.define(version: 2019_03_16_142242) do
     t.text "how_to_apply"
     t.integer "priority", default: 1000
     t.string "referral_email"
-    t.boolean "active", default: true
-    t.index ["active"], name: "index_opportunities_on_active"
+    t.datetime "deleted_at"
+    t.index ["deleted_at"], name: "index_opportunities_on_deleted_at"
     t.index ["employer_id"], name: "index_opportunities_on_employer_id"
     t.index ["inbound"], name: "index_opportunities_on_inbound"
     t.index ["opportunity_type_id"], name: "index_opportunities_on_opportunity_type_id"
