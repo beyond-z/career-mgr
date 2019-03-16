@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_03_16_143026) do
+ActiveRecord::Schema.define(version: 2019_03_16_183127) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -74,14 +74,14 @@ ActiveRecord::Schema.define(version: 2019_03_16_143026) do
     t.index ["name"], name: "index_coaches_on_name", unique: true
   end
 
-  create_table "coaches_cohorts", id: false, force: :cascade do |t|
+  create_table "coaches_cohorts", force: :cascade do |t|
     t.bigint "coach_id", null: false
     t.bigint "cohort_id", null: false
     t.index ["coach_id"], name: "index_coaches_cohorts_on_coach_id"
     t.index ["cohort_id"], name: "index_coaches_cohorts_on_cohort_id"
   end
 
-  create_table "coaches_employers", id: false, force: :cascade do |t|
+  create_table "coaches_employers", force: :cascade do |t|
     t.bigint "coach_id", null: false
     t.bigint "employer_id", null: false
     t.index ["coach_id"], name: "index_coaches_employers_on_coach_id"
@@ -169,7 +169,7 @@ ActiveRecord::Schema.define(version: 2019_03_16_143026) do
     t.index ["name"], name: "index_employers_on_name", unique: true
   end
 
-  create_table "employers_industries", id: false, force: :cascade do |t|
+  create_table "employers_industries", force: :cascade do |t|
     t.bigint "industry_id", null: false
     t.bigint "employer_id", null: false
     t.index ["employer_id"], name: "index_employers_industries_on_employer_id"
@@ -232,35 +232,35 @@ ActiveRecord::Schema.define(version: 2019_03_16_143026) do
     t.index ["user_id"], name: "index_fellows_on_user_id"
   end
 
-  create_table "fellows_industries", id: false, force: :cascade do |t|
+  create_table "fellows_industries", force: :cascade do |t|
     t.bigint "fellow_id", null: false
     t.bigint "industry_id", null: false
     t.index ["fellow_id"], name: "index_fellows_industries_on_fellow_id"
     t.index ["industry_id"], name: "index_fellows_industries_on_industry_id"
   end
 
-  create_table "fellows_interests", id: false, force: :cascade do |t|
+  create_table "fellows_interests", force: :cascade do |t|
     t.bigint "fellow_id", null: false
     t.bigint "interest_id", null: false
     t.index ["fellow_id"], name: "index_fellows_interests_on_fellow_id"
     t.index ["interest_id"], name: "index_fellows_interests_on_interest_id"
   end
 
-  create_table "fellows_majors", id: false, force: :cascade do |t|
+  create_table "fellows_majors", force: :cascade do |t|
     t.bigint "fellow_id", null: false
     t.bigint "major_id", null: false
     t.index ["fellow_id", "major_id"], name: "index_fellows_majors_on_fellow_id_and_major_id"
     t.index ["major_id", "fellow_id"], name: "index_fellows_majors_on_major_id_and_fellow_id"
   end
 
-  create_table "fellows_metros", id: false, force: :cascade do |t|
+  create_table "fellows_metros", force: :cascade do |t|
     t.bigint "fellow_id", null: false
     t.bigint "metro_id", null: false
     t.index ["fellow_id"], name: "index_fellows_metros_on_fellow_id"
     t.index ["metro_id"], name: "index_fellows_metros_on_metro_id"
   end
 
-  create_table "fellows_opportunity_types", id: false, force: :cascade do |t|
+  create_table "fellows_opportunity_types", force: :cascade do |t|
     t.bigint "fellow_id", null: false
     t.bigint "opportunity_type_id", null: false
     t.index ["fellow_id"], name: "index_fellows_opportunity_types_on_fellow_id"
@@ -275,7 +275,7 @@ ActiveRecord::Schema.define(version: 2019_03_16_143026) do
     t.index ["name"], name: "index_industries_on_name", unique: true
   end
 
-  create_table "industries_opportunities", id: false, force: :cascade do |t|
+  create_table "industries_opportunities", force: :cascade do |t|
     t.bigint "industry_id", null: false
     t.bigint "opportunity_id", null: false
     t.index ["industry_id"], name: "index_industries_opportunities_on_industry_id"
@@ -290,7 +290,7 @@ ActiveRecord::Schema.define(version: 2019_03_16_143026) do
     t.index ["name"], name: "index_interests_on_name", unique: true
   end
 
-  create_table "interests_opportunities", id: false, force: :cascade do |t|
+  create_table "interests_opportunities", force: :cascade do |t|
     t.bigint "interest_id", null: false
     t.bigint "opportunity_id", null: false
     t.index ["interest_id"], name: "index_interests_opportunities_on_interest_id"
@@ -306,7 +306,7 @@ ActiveRecord::Schema.define(version: 2019_03_16_143026) do
     t.index ["locateable_id", "locateable_type"], name: "index_locations_on_locateable_id_and_locateable_type"
   end
 
-  create_table "locations_opportunities", id: false, force: :cascade do |t|
+  create_table "locations_opportunities", force: :cascade do |t|
     t.bigint "location_id", null: false
     t.bigint "opportunity_id", null: false
     t.index ["location_id"], name: "index_locations_opportunities_on_location_id"
@@ -322,14 +322,14 @@ ActiveRecord::Schema.define(version: 2019_03_16_143026) do
     t.index ["parent_id"], name: "index_majors_on_parent_id"
   end
 
-  create_table "majors_opportunities", id: false, force: :cascade do |t|
+  create_table "majors_opportunities", force: :cascade do |t|
     t.bigint "major_id", null: false
     t.bigint "opportunity_id", null: false
     t.index ["major_id", "opportunity_id"], name: "index_majors_opportunities_on_major_id_and_opportunity_id"
     t.index ["opportunity_id", "major_id"], name: "index_majors_opportunities_on_opportunity_id_and_major_id"
   end
 
-  create_table "metro_relationships", id: false, force: :cascade do |t|
+  create_table "metro_relationships", force: :cascade do |t|
     t.integer "parent_id"
     t.integer "child_id"
     t.index ["child_id"], name: "index_metro_relationships_on_child_id"
@@ -350,7 +350,7 @@ ActiveRecord::Schema.define(version: 2019_03_16_143026) do
     t.index ["state"], name: "index_metros_on_state"
   end
 
-  create_table "metros_opportunities", id: false, force: :cascade do |t|
+  create_table "metros_opportunities", force: :cascade do |t|
     t.bigint "metro_id", null: false
     t.bigint "opportunity_id", null: false
     t.index ["metro_id"], name: "index_metros_opportunities_on_metro_id"
@@ -375,8 +375,10 @@ ActiveRecord::Schema.define(version: 2019_03_16_143026) do
     t.integer "priority", default: 1000
     t.string "referral_email"
     t.datetime "deleted_at"
+    t.boolean "export", default: false
     t.index ["deleted_at"], name: "index_opportunities_on_deleted_at"
     t.index ["employer_id"], name: "index_opportunities_on_employer_id"
+    t.index ["export"], name: "index_opportunities_on_export"
     t.index ["inbound"], name: "index_opportunities_on_inbound"
     t.index ["opportunity_type_id"], name: "index_opportunities_on_opportunity_type_id"
     t.index ["priority"], name: "index_opportunities_on_priority"
