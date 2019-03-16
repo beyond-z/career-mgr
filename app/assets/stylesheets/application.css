@@ -706,3 +706,11 @@ input.checkbox-multiline {
   margin-left: 0;
   margin-right: 8px;
 }
+
+.showpage h1 {
+  margin-bottom: 0;
+}
+
+.showpage p.subheader {
+	margin-top: 0;
+}
