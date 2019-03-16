@@ -25,7 +25,7 @@ class Opportunity < ApplicationRecord
   validates :job_posting_url, url: {ensure_protocol: true}
   validate :validate_locateable
   
-  scope :active, -> { where("application_deadline >= ?", Date.today) }
+  scope :active, -> { where("application_deadline >= ? or application_deadline IS NULL", Date.today) }
   scope :prioritized, -> { order(priority: :asc) }
   
   before_save :set_priority
