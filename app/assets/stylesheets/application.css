@@ -684,3 +684,25 @@ ul.response-links li {
 .form-disabled {
   display: none;
 }
+
+input[type="text"].search-box {
+  height: 28px;
+  width: 240px;
+  font-size: 16px;
+  padding-top: 0px;
+}
+
+input[type="submit"].search-box {
+  
+}
+
+label.checkbox-multiline {
+  display: block;
+  margin-left: 20px;
+}
+
+input.checkbox-multiline {
+  float: left;
+  margin-left: 0;
+  margin-right: 8px;
+}

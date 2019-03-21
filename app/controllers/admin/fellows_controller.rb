@@ -6,7 +6,11 @@ class Admin::FellowsController < ApplicationController
   # GET /fellows
   # GET /fellows.json
   def index
-    @fellows = Fellow.order(last_name: :asc, first_name: :asc).paginate(page: params[:page])
+    @fellows = if params[:q]
+      Fellow.simple_search(params[:q]).paginate(page: params[:page])
+    else
+      Fellow.order(last_name: :asc, first_name: :asc).paginate(page: params[:page])
+    end
   end
 
   # GET /fellows/1
@@ -112,6 +116,7 @@ class Admin::FellowsController < ApplicationController
         :employment_status_id, :industry_tags, :interest_tags, :metro_tags, :major_tags, :industry_interest_tags,
         :receive_opportunities,
         opportunity_type_ids: [], industry_ids: [], interest_ids: [], metro_ids: [],
+        industry_interest_names: [], major_names: [],
         contact_attributes: [:id, :address_1, :address_2, :city, :state, :postal_code, :phone, :email, :url]
       )
     end

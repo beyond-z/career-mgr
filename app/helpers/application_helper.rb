@@ -107,4 +107,9 @@ module ApplicationHelper
   def nav_link label, url
     link_to(label, url, class: (current_page?(url) ? 'current' : ''))
   end
+  
+  def column_range items, column_count, column_index
+    per_column = (items.size/column_count.to_f).ceil
+    items[column_index * per_column, per_column]
+  end
 end

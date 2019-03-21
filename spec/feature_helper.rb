@@ -64,4 +64,9 @@ module FeatureHelper
       expect(page).to have_content(options[:title])
     end
   end
+  
+  def label_for name, prefix=nil
+    label = name.downcase.gsub(/[^a-z0-9]+/, '')
+    prefix ? [prefix.to_s, label].join('_') : label
+  end
 end

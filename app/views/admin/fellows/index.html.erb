@@ -1,5 +1,10 @@
 <h1>Fellows</h1>
 
+<form method="GET">
+  <input type="text" name="q" placeholder="name, e-mail" value="<%= params[:q] %>" class="search-box">
+  <input type=submit value="search" class="search-box">
+</form>
+
 <table class="fellows wide">
   <thead>
     <tr>
