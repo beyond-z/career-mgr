@@ -1,5 +1,5 @@
 class Admin::OpportunitiesController < ApplicationController
-  skip_before_action :verify_authenticity_token, only: [:mark_for_export]
+  skip_before_action :verify_authenticity_token, only: [:mark_for_export, :queued]
   
   before_action :authenticate_user!
   before_action :ensure_admin!
@@ -28,6 +28,12 @@ class Admin::OpportunitiesController < ApplicationController
     Opportunity.where(id: params[:skip_ids]).update_all(export: false)
     
     render plain: 'ok'
+  end
+  def tester; end
+  def queued
+    @opportunities = Opportunity.ready_for_export
+    
+    render json: @opportunities
   end
 
   # GET /opportunities/1
