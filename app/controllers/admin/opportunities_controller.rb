@@ -27,13 +27,11 @@ class Admin::OpportunitiesController < ApplicationController
     Opportunity.where(id: params[:export_ids]).update_all(export: true)
     Opportunity.where(id: params[:skip_ids]).update_all(export: false)
     
-    render plain: 'ok'
+    render json: Opportunity.ready_for_export
   end
-  def tester; end
+
   def queued
-    @opportunities = Opportunity.ready_for_export
-    
-    render json: @opportunities
+    render json: Opportunity.ready_for_export
   end
 
   # GET /opportunities/1

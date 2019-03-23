@@ -175,9 +175,6 @@ $(document).on "turbolinks:load",  ->
   $('.opportunity-checkbox').change (event) ->
     update_export_settings()
     
-  update_export_setting = (item) ->
-    console.log('replace with a call to an endpoint that marks this opp for export in the db ' + item.id + ', ' + $(item).is(':checked'))
-    
   checkbox_values = (selector) ->
     $(selector).map(() -> $(this).val()).get().join()
     
@@ -185,15 +182,20 @@ $(document).on "turbolinks:load",  ->
     $(selector).map(() -> label + '=' + $(this).val()).get()
 
   update_export_settings = () ->
-    console.log('updating export settings...')
-    
     exports = array_param('export_ids[]', '.opportunity-checkbox:checked')
     skips = array_param('skip_ids[]', '.opportunity-checkbox:not(:checked)')
     data = exports.concat(skips).join('&')
     
-    $.post("/admin/opportunities/mark_for_export", data)
+    $.ajax({url: "/admin/opportunities/mark_for_export", method: 'POST', data: data, dataType: 'json', success: update_queued_opportunities})
+    
+  update_queued_opportunities = (data) ->
+    $('#export-to-csv').val('Export ' + data.length + ' Opportunities to CSV')
+    
+  reset_queued_opportunities = () ->
+    $.ajax({url: '/admin/opportunities/queued', dataType: 'json', success: update_queued_opportunities})
       
   reset_datepicker()
   reset_removeable()
   reset_zip_match()
   reset_referral_contact()
+  reset_queued_opportunities()
