@@ -105,7 +105,11 @@ class Admin::OpportunitiesController < ApplicationController
     @opportunities = (@employer ? @employer.opportunities : Opportunity).active.prioritized.paginate(page: params[:page])
     
     unless params[:region_id].blank?
-      @opportunities = @opportunities.where(region_id: params[:region_id])
+      @opportunities = if params[:region_id] == 'queued'
+        @opportunities.ready_for_export
+      else
+        @opportunities.where(region_id: params[:region_id])
+      end
     end
   end
   
