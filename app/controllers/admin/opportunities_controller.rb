@@ -14,7 +14,7 @@ class Admin::OpportunitiesController < ApplicationController
   def export
     respond_to do |format|
       format.csv do
-        @opportunities = unpaginated_opportunities
+        @opportunities = exportable_opportunities
         @opportunities.each(&:publish!)
     
         headers['Content-Disposition'] = "attachment; filename=\"opportunities.csv\""
@@ -105,8 +105,8 @@ class Admin::OpportunitiesController < ApplicationController
     end
   end
   
-  def unpaginated_opportunities
-    (@employer ? @employer.opportunities : Opportunity).where(id: params[:export_ids]).prioritized.sort_by{|o| o.application_deadline || 10.years.from_now}
+  def exportable_opportunities
+    (@employer ? @employer.opportunities : Opportunity).ready_for_export.prioritized.sort_by{|o| o.application_deadline || 10.years.from_now}
   end
   
   # Use callbacks to share common setup or constraints between actions.

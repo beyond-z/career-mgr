@@ -27,6 +27,7 @@ class Opportunity < ApplicationRecord
   
   scope :active, -> { where("application_deadline >= ? or application_deadline IS NULL", Date.today) }
   scope :prioritized, -> { order(priority: :asc) }
+  scope :ready_for_export, -> { where(export: true) }
   
   before_save :set_priority
   
@@ -237,7 +238,7 @@ class Opportunity < ApplicationRecord
   end
   
   def publish!
-    update published: true
+    update published: true, export: false
   end
   
   def unpublish!
