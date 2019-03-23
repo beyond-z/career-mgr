@@ -44,6 +44,7 @@ Rails.application.routes.draw do
     resources :opportunities, only: [:index] do
       collection do
         get :queued
+        get :unqueue
 
         post :mark_for_export
         post :export

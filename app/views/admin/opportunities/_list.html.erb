@@ -48,6 +48,9 @@
       </tbody>
     </table>
 
-    <p><%= submit_tag 'Export to CSV', id: 'export-to-csv' %></p>
+    <p>
+      <%= submit_tag 'Export to CSV', id: 'export-to-csv' %>
+      <%= link_to 'Clear Export List', unqueue_admin_opportunities_path, class: 'button-white' %>
+    </p>
   <% end %>
 <% end %>

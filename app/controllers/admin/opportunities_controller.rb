@@ -33,6 +33,13 @@ class Admin::OpportunitiesController < ApplicationController
   def queued
     render json: Opportunity.ready_for_export
   end
+  
+  def unqueue
+    Opportunity.ready_for_export.update_all(export: false)
+    flash[:notice] = 'There are no more opportunties queued for export'
+
+    redirect_to admin_opportunities_path
+  end
 
   # GET /opportunities/1
   # GET /opportunities/1.json

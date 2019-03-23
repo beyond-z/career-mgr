@@ -707,6 +707,24 @@ input.checkbox-multiline {
   margin-right: 8px;
 }
 
+a.button-white {
+  background: white;
+  color: black;
+  border: 1px solid #ccc;
+  padding: 6px 12px;
+  font-family: DIN, "TradeGothicNo.20-CondBold", "Oswald", sans-serif;
+  text-transform: uppercase;
+  border-radius: 2px;
+  transition: background-color 0.2s ease-in-out;
+  margin-bottom: 0;
+  line-height: 1;
+  font-size: 12px;
+}
+
+a.button-white:hover {
+  background: #eee;
+  text-decoration: none;
+}
 .showpage h1 {
   margin-bottom: 0;
 }
