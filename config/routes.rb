@@ -50,6 +50,7 @@ Rails.application.routes.draw do
   
     resources :opportunities, only: [:index] do
       collection do
+        post :mark_for_export
         post :export
       end
       

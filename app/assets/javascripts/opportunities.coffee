@@ -170,6 +170,29 @@ $(document).on "turbolinks:load",  ->
     else
       $('.opportunity-checkbox').prop('checked', false)
       
+    update_export_settings()
+			
+  $('.opportunity-checkbox').change (event) ->
+    update_export_settings()
+    
+  update_export_setting = (item) ->
+    console.log('replace with a call to an endpoint that marks this opp for export in the db ' + item.id + ', ' + $(item).is(':checked'))
+    
+  checkbox_values = (selector) ->
+    $(selector).map(() -> $(this).val()).get().join()
+    
+  array_param = (label, selector) ->
+    $(selector).map(() -> label + '=' + $(this).val()).get()
+
+  update_export_settings = () ->
+    console.log('updating export settings...')
+    
+    exports = array_param('export_ids[]', '.opportunity-checkbox:checked')
+    skips = array_param('skip_ids[]', '.opportunity-checkbox:not(:checked)')
+    data = exports.concat(skips).join('&')
+    
+    $.post("/admin/opportunities/mark_for_export", data)
+      
   reset_datepicker()
   reset_removeable()
   reset_zip_match()

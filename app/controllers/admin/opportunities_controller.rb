@@ -1,4 +1,6 @@
 class Admin::OpportunitiesController < ApplicationController
+  skip_before_action :verify_authenticity_token, only: [:mark_for_export]
+  
   before_action :authenticate_user!
   before_action :ensure_admin!
   before_action :set_employer
@@ -19,6 +21,13 @@ class Admin::OpportunitiesController < ApplicationController
         headers['Content-Type'] ||= 'text/csv'
       end
     end
+  end
+  
+  def mark_for_export
+    Opportunity.where(id: params[:export_ids]).update_all(export: true)
+    Opportunity.where(id: params[:skip_ids]).update_all(export: false)
+    
+    render plain: 'ok'
   end
 
   # GET /opportunities/1
