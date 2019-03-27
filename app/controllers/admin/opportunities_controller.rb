@@ -111,11 +111,16 @@ class Admin::OpportunitiesController < ApplicationController
     @employer = Employer.find(params[:employer_id]) if params[:employer_id]
     @opportunities = (@employer ? @employer.opportunities : Opportunity).active.prioritized.paginate(page: params[:page])
     
-    unless params[:region_id].blank?
-      @opportunities = if params[:region_id] == 'queued'
-        @opportunities.ready_for_export
+    if params[:region_id].blank?
+      @opportunities = @opportunities.current
+    else
+      @opportunities = case params[:region_id]
+      when 'queued'
+        @opportunities.current.ready_for_export
+      when 'expired'
+        @opportunities.expired
       else
-        @opportunities.where(region_id: params[:region_id])
+        @opportunities.current.where(region_id: params[:region_id])
       end
     end
   end
