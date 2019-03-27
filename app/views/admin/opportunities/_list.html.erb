@@ -11,8 +11,8 @@
     <table class="wide">
       <thead>
         <tr>
+          <th>Opportunity</th>
           <th>Employer</th>
-          <th>Title</th>
           <th>Summary</th>
           <th>Deadline</th>
           <th>Published</th>
@@ -29,8 +29,8 @@
       <tbody>
         <% opportunities.each do |opportunity| %>
           <tr>
-            <td><%= opportunity.employer.name %>
             <td><%= link_to opportunity.name, admin_opportunity_path(opportunity) %></td>
+            <td><%= opportunity.employer.name %>
             <td><%= truncate(opportunity.summary, length: 100, separator: ' ') %></td>
             <td><%= date_format(opportunity.application_deadline) %></td>
             <td class="checkmark"><%= checkmark(opportunity.published?) %></td>
