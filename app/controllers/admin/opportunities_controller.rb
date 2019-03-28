@@ -131,7 +131,7 @@ class Admin::OpportunitiesController < ApplicationController
   
   # Use callbacks to share common setup or constraints between actions.
   def set_opportunity
-    @opportunity = @opportunities.find(params[:id])
+    @opportunity = Opportunity.find(params[:id])
   end
 
   # Never trust parameters from the scary internet, only allow the white list through.
