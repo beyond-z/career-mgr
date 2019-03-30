@@ -109,7 +109,7 @@ class Admin::OpportunitiesController < ApplicationController
   
   def set_employer
     @employer = Employer.find(params[:employer_id]) if params[:employer_id]
-    @opportunities = (@employer ? @employer.opportunities : Opportunity).active.prioritized.paginate(page: params[:page])
+    @opportunities = (@employer ? @employer.opportunities : Opportunity).prioritized.paginate(page: params[:page])
     
     if params[:region_id].blank?
       @opportunities = @opportunities.current
@@ -131,7 +131,7 @@ class Admin::OpportunitiesController < ApplicationController
   
   # Use callbacks to share common setup or constraints between actions.
   def set_opportunity
-    @opportunity = Opportunity.find(params[:id])
+    @opportunity = @opportunities.find(params[:id])
   end
 
   # Never trust parameters from the scary internet, only allow the white list through.
