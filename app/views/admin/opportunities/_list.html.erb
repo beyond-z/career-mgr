@@ -41,8 +41,11 @@
             </td>
             <td rowspan="2" class="double-row numeric"><%= check_box_tag 'export_ids[]', opportunity.id, opportunity.export, class: 'opportunity-checkbox' %></td>
           </tr>
-          <tr><td colspan="3" class="summary">
-            <%= truncate(opportunity.summary, length: 200, separator: ' ') %>
+          <tr><td colspan="3">
+            <div class="summary">
+              <hr>
+              <%= truncate(opportunity.summary, length: 250, separator: ' ') %>
+            </div>
           </td></tr>
         <% end %>
       </tbody>

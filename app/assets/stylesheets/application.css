@@ -174,7 +174,7 @@ tr {
 }
 
 tr.sub-row {
-  border-bottom: 1px solid #eee;
+  border-bottom: 0;
 }
 
 td.double-row {
@@ -762,5 +762,11 @@ a.button-white:hover {
 }
 
 .summary {
+  width: 90%;
   font-size: 0.8em;
+}
+
+.summary hr {
+  border-top: 1px solid #eee;
+  border-bottom: 0;
 }
