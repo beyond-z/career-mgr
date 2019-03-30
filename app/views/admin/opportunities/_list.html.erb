@@ -1,7 +1,15 @@
-<%= form_tag admin_opportunities_path, method: :get, id: 'opportunity-filters' do %>
+<%= form_tag admin_opportunities_path, method: :get, id: 'opportunity-filters', class: 'inline' do %>
+  <%= hidden_field_tag(:sort, params[:sort]) %>
   <%= select_tag(:filter, grouped_options_for_select(opportunity_filters, params[:filter]), include_blank: 'Unfiltered Opportunities')%>
   
   <%= submit_tag 'filter' %>
+<% end %>
+
+<%= form_tag admin_opportunities_path, method: :get, id: 'opportunity-sort', class: 'inline' do %>
+  <%= hidden_field_tag(:filter, params[:filter]) %>
+  <%= select_tag(:sort, options_for_select([['Highest Priority', 'priority'], ['Recently Added', 'recent']], params[:sort]))%>
+  
+  <%= submit_tag 'sort' %>
 <% end %>
 
 <% if opportunities.empty? %>
@@ -11,14 +19,14 @@
     <table class="wide">
       <thead>
         <tr>
-          <th>Opportunity</th>
-          <th>Employer</th>
-          <th>Priority</th>
-          <th>Added</th>
-          <th>Deadline</th>
-          <th>Status</th>
-          <th>Actions</th>
-          <th class="numeric" style="white-space: nowrap">
+          <th style="width: 20%;">Opportunity</th>
+          <th style="width: 20%;">Employer</th>
+          <th style="width: 10%;" class="numeric">Priority</th>
+          <th style="width: 10%;">Added</th>
+          <th style="width: 10%;">Deadline</th>
+          <th style="width: 14%;">Status</th>
+          <th style="width: 8%;">Actions</th>
+          <th class="numeric" style="white-space: nowrap; width: 8%;">
             Export <input type="checkbox" id="check-all-opportunities">
           </th>
         </tr>
@@ -29,7 +37,7 @@
           <tr class="sub-row">
             <td><%= link_to opportunity.name, admin_opportunity_path(opportunity) %></td>
             <td><%= opportunity.employer.name %></td>
-            <td><%= opportunity.scaled_priority %></td>
+            <td class="numeric"><%= opportunity.scaled_priority %></td>
             <td><%= date_format(opportunity.created_at) %></td>
             <td><%= date_format(opportunity.application_deadline) %></td>
             <td rowspan="2" class="double-row status">
