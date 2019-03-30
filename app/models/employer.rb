@@ -11,6 +11,8 @@ class Employer < ApplicationRecord
   taggable :industries
   
   accepts_nested_attributes_for :industries
+  
+  scope :alphabetical, -> { order(name: :asc) }
 
   validates :name, presence: true, uniqueness: true
 

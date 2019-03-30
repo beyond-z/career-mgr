@@ -1,7 +1,7 @@
 <h1>Add New Opportunity</h1>
 <h2>Step 1: Choose an existing employer:</h2>
 <ul>  
-  <% @employers.each do |employer| %>
+  <% @employers.alphabetical.each do |employer| %>
     <li><%= link_to employer.name, new_admin_employer_opportunity_path(employer) %></li>
   <% end %>
 </ul>
