@@ -260,7 +260,7 @@ class Opportunity < ApplicationRecord
   end
   
   def publish!
-    update published: true, export: false
+    update published: true
   end
   
   def unpublish!

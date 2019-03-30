@@ -51,7 +51,7 @@
               <%= link_to 'Delete', admin_opportunity_path(opportunity), method: :delete, data: { confirm: 'Are you sure?' }, class: 'delete' %><br />
               <%= link_to('Unpublish', unpublish_admin_opportunity_path(opportunity), method: :put, class: 'edit') if opportunity.published? %>
             </td>
-            <td rowspan="2" class="double-row numeric"><%= check_box_tag 'export_ids[]', opportunity.id, opportunity.export, class: 'opportunity-checkbox' %></td>
+            <td rowspan="2" class="double-row numeric"><%= check_box_tag 'export_ids[]', opportunity.id, current_user.export_ids.include?(opportunity.id), class: 'opportunity-checkbox' %></td>
           </tr>
           <tr><td colspan="5">
             <div class="summary">
