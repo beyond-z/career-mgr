@@ -1,5 +1,5 @@
 <%= form_tag admin_opportunities_path, method: :get, id: 'opportunity-filters' do %>
-  <%= select_tag(:region_id, grouped_options_for_select(opportunity_filters, params[:region_id]), include_blank: 'Choose a Filter')%>
+  <%= select_tag(:filter, grouped_options_for_select(opportunity_filters, params[:filter]), include_blank: 'Unfiltered Opportunities')%>
   
   <%= submit_tag 'filter' %>
 <% end %>
@@ -31,10 +31,10 @@
             <td><%= truncate(opportunity.summary, length: 100, separator: ' ') %></td>
             <td><%= date_format(opportunity.application_deadline) %></td>
             <td class="status">
-              <%= status('published',         opportunity.published?) %>
-              <%= status('employer partner',  opportunity.employer_partner?) %>
-              <%= status('inbound',           opportunity.published?) %>
-              <%= status('recurring',         opportunity.published?) %>
+              <%= status('Published',         opportunity.published?) %>
+              <%= status('Employer Partner',  opportunity.employer_partner?) %>
+              <%= status('Inbound',           opportunity.inbound?) %>
+              <%= status('Recurring',         opportunity.recurring?) %>
             </td>
             <td>
               <%= link_to 'Edit', edit_admin_opportunity_path(opportunity), class: 'edit' %><br/>

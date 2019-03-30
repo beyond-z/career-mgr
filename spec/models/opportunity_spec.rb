@@ -116,6 +116,48 @@ RSpec.describe Opportunity, type: :model do
     it { expect(subject[3]).to eq(fourth) }
   end
   
+  describe 'published' do
+    let!(:published) { create :opportunity, published: true }
+    let!(:unpublished) { create :opportunity, published: false }
+    
+    subject { Opportunity.published }
+    
+    it { should include(published) }
+    it { should_not include(unpublished) }
+  end
+  
+  describe 'employer_partner' do
+    let(:partner) { create :employer, employer_partner: true }
+    let(:not_partner) { create :employer, employer_partner: false }
+    let!(:employer_partner) { create :opportunity, employer: partner }
+    let!(:not_employer_partner) { create :opportunity, employer: not_partner }
+    
+    subject { Opportunity.employer_partner }
+    
+    it { should include(employer_partner) }
+    it { should_not include(not_employer_partner) }
+  end
+  
+  describe 'inbound' do
+    let!(:inbound) { create :opportunity, inbound: true }
+    let!(:not_inbound) { create :opportunity, inbound: false }
+    
+    subject { Opportunity.inbound }
+    
+    it { should include(inbound) }
+    it { should_not include(not_inbound) }
+  end
+  
+  describe 'recurring' do
+    let!(:recurring) { create :opportunity, recurring: true }
+    let!(:not_recurring) { create :opportunity, recurring: false }
+    
+    subject { Opportunity.recurring }
+    
+    it { should include(recurring) }
+    it { should_not include(not_recurring) }
+  end
+  
   ###############
   # Serialization
   ###############

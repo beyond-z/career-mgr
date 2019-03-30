@@ -30,6 +30,12 @@ class Opportunity < ApplicationRecord
   scope :expired, -> { where("application_deadline < ?", Date.today) }
   scope :current, -> { where("application_deadline >= ? or application_deadline IS NULL", Date.today) }
   
+  # boolean status-based scopes
+  scope :published, -> { where(published: true) }
+  scope :employer_partner, -> { joins(:employer).where('employers.employer_partner' => true) }
+  scope :inbound, -> { where(inbound: true) }
+  scope :recurring, -> { where(recurring: true) }
+  
   delegate :employer_partner?, to: :employer
   
   before_save :set_priority
