@@ -13,6 +13,8 @@ class User < ApplicationRecord
   before_create :attempt_admin_set, unless: :is_admin?
   after_save :attempt_fellow_match, if: :missing_fellow?
   
+  scope :admin, -> { where(is_admin: true) }
+  
   def role
     if is_admin?
       :admin
