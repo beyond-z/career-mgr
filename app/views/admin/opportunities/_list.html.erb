@@ -15,10 +15,7 @@
           <th>Employer</th>
           <th>Summary</th>
           <th>Deadline</th>
-          <th>Published</th>
-          <th>Partner</th>
-          <th>Inbound</th>
-          <th>Recurring</th>
+          <th>Status</th>
           <th>Actions</th>
           <th class="numeric" style="white-space: nowrap">
             Export <input type="checkbox" id="check-all-opportunities">
@@ -33,10 +30,12 @@
             <td><%= opportunity.employer.name %>
             <td><%= truncate(opportunity.summary, length: 100, separator: ' ') %></td>
             <td><%= date_format(opportunity.application_deadline) %></td>
-            <td class="checkmark"><%= checkmark(opportunity.published?) %></td>
-            <td class="checkmark"><%= checkmark(opportunity.employer.employer_partner) %>
-            <td class="checkmark"><%= checkmark(opportunity.inbound) %></td>
-            <td class="checkmark"><%= checkmark(opportunity.recurring) %></td>
+            <td class="status">
+              <%= status('published',         opportunity.published?) %>
+              <%= status('employer partner',  opportunity.employer_partner?) %>
+              <%= status('inbound',           opportunity.published?) %>
+              <%= status('recurring',         opportunity.published?) %>
+            </td>
             <td>
               <%= link_to 'Edit', edit_admin_opportunity_path(opportunity), class: 'edit' %><br/>
               <%= link_to 'Delete', admin_opportunity_path(opportunity), method: :delete, data: { confirm: 'Are you sure?' }, class: 'delete' %><br />

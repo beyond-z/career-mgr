@@ -30,6 +30,8 @@ class Opportunity < ApplicationRecord
   scope :expired, -> { where("application_deadline < ?", Date.today) }
   scope :current, -> { where("application_deadline >= ? or application_deadline IS NULL", Date.today) }
   
+  delegate :employer_partner?, to: :employer
+  
   before_save :set_priority
   
   class << self

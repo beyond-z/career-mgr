@@ -299,6 +299,23 @@ RSpec.describe Opportunity, type: :model do
     end
   end
   
+  describe '#employer_partner?' do
+    let(:employer) { Employer.new employer_partner: employer_partner }
+    let(:opportunity) { Opportunity.new employer: employer }
+    
+    subject { opportunity.employer_partner? }
+    
+    describe 'when employer is a partner' do
+      let(:employer_partner) { true }
+      it { should eq(true) }
+    end
+    
+    describe 'when employer is not a partner' do
+      let(:employer_partner) { false }
+      it { should eq(false) }
+    end
+  end
+  
   describe '#formatted_name' do
     let(:employer) { build :employer, name: 'ABC Employer' }
     let(:opportunity) { build :opportunity, name: 'Internship', employer: employer } 

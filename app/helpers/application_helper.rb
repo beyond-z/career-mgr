@@ -59,6 +59,11 @@ module ApplicationHelper
     boolean ? '&#x2714;'.html_safe : ''
   end
   
+  def status label, boolean
+    css = boolean ? 'checked' : 'unchecked'
+    "<span class='status-#{css}'>#{label}</span><br>".html_safe
+  end
+  
   def paragraph_format text
     cleaned_text = text.gsub(/\r/, '').gsub(/\n+/, '</p><p>')
     "<p>#{cleaned_text}</p>".html_safe
