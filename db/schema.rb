@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_03_16_183127) do
+ActiveRecord::Schema.define(version: 2019_03_30_165838) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -385,6 +385,15 @@ ActiveRecord::Schema.define(version: 2019_03_16_183127) do
     t.index ["published"], name: "index_opportunities_on_published"
     t.index ["recurring"], name: "index_opportunities_on_recurring"
     t.index ["region_id"], name: "index_opportunities_on_region_id"
+  end
+
+  create_table "opportunity_exports", force: :cascade do |t|
+    t.integer "user_id"
+    t.integer "opportunity_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["opportunity_id"], name: "index_opportunity_exports_on_opportunity_id"
+    t.index ["user_id"], name: "index_opportunity_exports_on_user_id"
   end
 
   create_table "opportunity_stages", force: :cascade do |t|

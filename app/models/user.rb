@@ -8,6 +8,9 @@ class User < ApplicationRecord
          
   has_one :fellow
   
+  has_many :opportunity_exports
+  has_many :opportunities, through: :opportunity_exports
+  
   before_create :attempt_admin_set, unless: :is_admin?
   after_save :attempt_fellow_match, if: :missing_fellow?
   
