@@ -13,6 +13,8 @@
         <tr>
           <th>Opportunity</th>
           <th>Employer</th>
+          <th>Priority</th>
+          <th>Added</th>
           <th>Deadline</th>
           <th>Status</th>
           <th>Actions</th>
@@ -26,7 +28,9 @@
         <% opportunities.each do |opportunity| %>
           <tr class="sub-row">
             <td><%= link_to opportunity.name, admin_opportunity_path(opportunity) %></td>
-            <td><%= opportunity.employer.name %>
+            <td><%= opportunity.employer.name %></td>
+            <td><%= opportunity.scaled_priority %></td>
+            <td><%= date_format(opportunity.created_at) %></td>
             <td><%= date_format(opportunity.application_deadline) %></td>
             <td rowspan="2" class="double-row status">
               <%= status('Published',         opportunity.published?) %>
@@ -41,7 +45,7 @@
             </td>
             <td rowspan="2" class="double-row numeric"><%= check_box_tag 'export_ids[]', opportunity.id, opportunity.export, class: 'opportunity-checkbox' %></td>
           </tr>
-          <tr><td colspan="3">
+          <tr><td colspan="5">
             <div class="summary">
               <hr>
               <%= truncate(opportunity.summary, length: 250, separator: ' ') %>

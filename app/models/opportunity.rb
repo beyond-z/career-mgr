@@ -241,9 +241,17 @@ class Opportunity < ApplicationRecord
       6
     end
     
-    value += 10 if published?
+    value += 7 if published?
     
     value
+  end
+  
+  def max_priority
+    13
+  end
+  
+  def scaled_priority
+    ((max_priority - calculated_priority) * max_priority / 10).to_i + 1
   end
   
   def publish!

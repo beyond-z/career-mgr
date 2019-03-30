@@ -73,7 +73,7 @@ module ApplicationHelper
     if date.respond_to?(:strftime)
       date.strftime('%b %-d, %Y')
     else
-      ''
+      'N/A'
     end
   end
   
