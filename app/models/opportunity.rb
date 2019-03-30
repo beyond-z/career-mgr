@@ -13,6 +13,7 @@ class Opportunity < ApplicationRecord
   
   has_many :fellow_opportunities, dependent: :destroy
   has_many :fellows, through: :fellow_opportunities
+  has_many :opportunity_exports
   
   taggable :industries, :interests, :majors, :industry_interests, :metros
 
@@ -30,7 +31,7 @@ class Opportunity < ApplicationRecord
   scope :recent, -> { order(created_at: :desc) }
   
   # conditional scopes
-  scope :ready_for_export, -> { where(export: true) }
+  scope :ready_for_export, -> (user) { joins(:opportunity_exports).where('opportunity_exports.user_id' => user.id) }
   scope :expired, -> { where("application_deadline < ?", Date.today) }
   scope :current, -> { where("application_deadline >= ? or application_deadline IS NULL", Date.today) }
   
