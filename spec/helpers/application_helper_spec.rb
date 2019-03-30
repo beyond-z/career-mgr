@@ -167,7 +167,7 @@ RSpec.describe ApplicationHelper, type: :helper do
     
     describe 'when date is nil' do
       let(:date) { nil }
-      it { should eq('') }
+      it { should eq('N/A') }
     end
   end
   

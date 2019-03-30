@@ -116,6 +116,16 @@ RSpec.describe Opportunity, type: :model do
     it { expect(subject[3]).to eq(fourth) }
   end
   
+  describe 'recent' do
+    let!(:newer) { create :opportunity }
+    let!(:older) { create :opportunity, created_at: 10.days.ago }
+    
+    subject { Opportunity.recent }
+    
+    it { expect(subject[0]).to eq(newer) }
+    it { expect(subject[1]).to eq(older) }
+  end
+  
   describe 'published' do
     let!(:published) { create :opportunity, published: true }
     let!(:unpublished) { create :opportunity, published: false }
@@ -480,41 +490,41 @@ RSpec.describe Opportunity, type: :model do
         let(:inbound) { true }
         let(:recurring) { true }
       
-        it { should eq(10) }
+        it { should eq(7) }
       end
     
       describe 'when employer_partner AND inbound' do
         let(:employer_partner) { true }
         let(:inbound) { true }
 
-        it { should eq(11) }
+        it { should eq(8) }
       end
     
       describe 'when inbound' do
         let(:inbound) { true }
-        it { should eq(12) }
+        it { should eq(9) }
       end
     
       describe 'when employer_partner AND recurring' do
         let(:employer_partner) { true }
         let(:recurring) { true }
       
-        it { should eq(13) }
+        it { should eq(10) }
       end
     
       describe 'when employer_partner' do
         let(:employer_partner) { true }
       
-        it { should eq(14) }
+        it { should eq(11) }
       end
     
       describe 'when recurring' do
         let(:recurring) { true }
-        it { should eq(15) }
+        it { should eq(12) }
       end
     
       describe 'when none are true' do
-        it { should eq(16) }
+        it { should eq(13) }
       end
     end
     

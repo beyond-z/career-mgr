@@ -109,7 +109,7 @@ class Admin::OpportunitiesController < ApplicationController
   
   def set_employer
     @employer = Employer.find(params[:employer_id]) if params[:employer_id]
-    @opportunities = (@employer ? @employer.opportunities : Opportunity).prioritized.paginate(page: params[:page])
+    @opportunities = (@employer ? @employer.opportunities : Opportunity).paginate(page: params[:page])
     
     if params[:filter].blank?
       @opportunities = @opportunities.current
@@ -122,6 +122,12 @@ class Admin::OpportunitiesController < ApplicationController
       else
         @opportunities.current.where(region_id: params[:filter])
       end
+    end
+    
+    @opportunities = if params[:sort] == 'recent'
+      @opportunities.recent
+    else
+      @opportunities.prioritized
     end
   end
   
