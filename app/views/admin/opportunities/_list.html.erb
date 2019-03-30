@@ -13,7 +13,6 @@
         <tr>
           <th>Opportunity</th>
           <th>Employer</th>
-          <th>Summary</th>
           <th>Deadline</th>
           <th>Status</th>
           <th>Actions</th>
@@ -25,24 +24,26 @@
 
       <tbody>
         <% opportunities.each do |opportunity| %>
-          <tr>
+          <tr class="sub-row">
             <td><%= link_to opportunity.name, admin_opportunity_path(opportunity) %></td>
             <td><%= opportunity.employer.name %>
-            <td><%= truncate(opportunity.summary, length: 100, separator: ' ') %></td>
             <td><%= date_format(opportunity.application_deadline) %></td>
-            <td class="status">
+            <td rowspan="2" class="double-row status">
               <%= status('Published',         opportunity.published?) %>
               <%= status('Employer Partner',  opportunity.employer_partner?) %>
               <%= status('Inbound',           opportunity.inbound?) %>
               <%= status('Recurring',         opportunity.recurring?) %>
             </td>
-            <td>
+            <td rowspan="2" class="double-row">
               <%= link_to 'Edit', edit_admin_opportunity_path(opportunity), class: 'edit' %><br/>
               <%= link_to 'Delete', admin_opportunity_path(opportunity), method: :delete, data: { confirm: 'Are you sure?' }, class: 'delete' %><br />
               <%= link_to('Unpublish', unpublish_admin_opportunity_path(opportunity), method: :put, class: 'edit') if opportunity.published? %>
             </td>
-            <td class="numeric"><%= check_box_tag 'export_ids[]', opportunity.id, opportunity.export, class: 'opportunity-checkbox' %></td>
+            <td rowspan="2" class="double-row numeric"><%= check_box_tag 'export_ids[]', opportunity.id, opportunity.export, class: 'opportunity-checkbox' %></td>
           </tr>
+          <tr><td colspan="3" class="summary">
+            <%= truncate(opportunity.summary, length: 200, separator: ' ') %>
+          </td></tr>
         <% end %>
       </tbody>
     </table>

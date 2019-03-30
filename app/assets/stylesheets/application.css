@@ -146,6 +146,11 @@ table.wide {
   table-layout: auto;
 }
 
+table.wide th,
+table.wide td {
+  vertical-align: top;
+}
+
 th {
   text-align: left;
   width: 1%;
@@ -166,6 +171,14 @@ td, th {
 
 tr {
   border-bottom: 1px solid #CCC;
+}
+
+tr.sub-row {
+  border-bottom: 1px solid #eee;
+}
+
+td.double-row {
+  border-bottom: 1px solid #ccc;
 }
 
 tr:first-child {
@@ -746,4 +759,8 @@ a.button-white:hover {
 .status-unchecked::before {
   content: '\2610 \00a0';
   font-size: 1.4em;
+}
+
+.summary {
+  font-size: 0.8em;
 }
