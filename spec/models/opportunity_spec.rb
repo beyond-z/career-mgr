@@ -83,13 +83,13 @@ RSpec.describe Opportunity, type: :model do
   # Scopes
   ########
   
-  describe 'active' do
+  describe 'current' do
     let(:deadline_nil) { create :opportunity, application_deadline: nil }
     let(:deadline_tomorrow) { create :opportunity, application_deadline: Date.tomorrow }
     let(:deadline_today) { create :opportunity, application_deadline: Date.today }
     let(:deadline_yesterday) { create :opportunity, application_deadline: Date.yesterday }
     
-    subject { Opportunity.active }
+    subject { Opportunity.current }
     
     it { should include(deadline_nil) }
     it { should include(deadline_tomorrow) }
