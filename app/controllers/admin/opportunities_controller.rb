@@ -109,19 +109,25 @@ class Admin::OpportunitiesController < ApplicationController
   
   def set_employer
     @employer = Employer.find(params[:employer_id]) if params[:employer_id]
-    @opportunities = (@employer ? @employer.opportunities : Opportunity).prioritized.paginate(page: params[:page])
+    @opportunities = (@employer ? @employer.opportunities : Opportunity).paginate(page: params[:page])
     
-    if params[:region_id].blank?
+    if params[:filter].blank?
       @opportunities = @opportunities.current
     else
-      @opportunities = case params[:region_id]
+      @opportunities = case params[:filter]
       when 'queued'
-        @opportunities.current.ready_for_export
-      when 'expired'
-        @opportunities.expired
+        @opportunities.ready_for_export
+      when 'expired', 'published', 'employer_partner', 'inbound', 'recurring'
+        @opportunities.send(params[:filter])
       else
-        @opportunities.current.where(region_id: params[:region_id])
+        @opportunities.current.where(region_id: params[:filter])
       end
+    end
+    
+    @opportunities = if params[:sort] == 'recent'
+      @opportunities.recent
+    else
+      @opportunities.prioritized
     end
   end
   

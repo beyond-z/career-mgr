@@ -25,10 +25,22 @@ class Opportunity < ApplicationRecord
   validates :job_posting_url, url: {ensure_protocol: true}
   validate :validate_locateable
   
+  # sorting scopes
   scope :prioritized, -> { order(priority: :asc) }
+  scope :recent, -> { order(created_at: :desc) }
+  
+  # conditional scopes
   scope :ready_for_export, -> { where(export: true) }
   scope :expired, -> { where("application_deadline < ?", Date.today) }
   scope :current, -> { where("application_deadline >= ? or application_deadline IS NULL", Date.today) }
+  
+  # boolean status-based scopes
+  scope :published, -> { where(published: true) }
+  scope :employer_partner, -> { joins(:employer).where('employers.employer_partner' => true) }
+  scope :inbound, -> { where(inbound: true) }
+  scope :recurring, -> { where(recurring: true) }
+  
+  delegate :employer_partner?, to: :employer
   
   before_save :set_priority
   
@@ -233,9 +245,17 @@ class Opportunity < ApplicationRecord
       6
     end
     
-    value += 10 if published?
+    value += 7 if published?
     
     value
+  end
+  
+  def max_priority
+    13
+  end
+  
+  def scaled_priority
+    ((max_priority - calculated_priority) * max_priority / 10).to_i + 1
   end
   
   def publish!
