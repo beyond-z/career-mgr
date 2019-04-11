@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_03_16_183127) do
+ActiveRecord::Schema.define(version: 2019_03_30_182222) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -375,16 +375,23 @@ ActiveRecord::Schema.define(version: 2019_03_16_183127) do
     t.integer "priority", default: 1000
     t.string "referral_email"
     t.datetime "deleted_at"
-    t.boolean "export", default: false
     t.index ["deleted_at"], name: "index_opportunities_on_deleted_at"
     t.index ["employer_id"], name: "index_opportunities_on_employer_id"
-    t.index ["export"], name: "index_opportunities_on_export"
     t.index ["inbound"], name: "index_opportunities_on_inbound"
     t.index ["opportunity_type_id"], name: "index_opportunities_on_opportunity_type_id"
     t.index ["priority"], name: "index_opportunities_on_priority"
     t.index ["published"], name: "index_opportunities_on_published"
     t.index ["recurring"], name: "index_opportunities_on_recurring"
     t.index ["region_id"], name: "index_opportunities_on_region_id"
+  end
+
+  create_table "opportunity_exports", force: :cascade do |t|
+    t.integer "user_id"
+    t.integer "opportunity_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["opportunity_id"], name: "index_opportunity_exports_on_opportunity_id"
+    t.index ["user_id"], name: "index_opportunity_exports_on_user_id"
   end
 
   create_table "opportunity_stages", force: :cascade do |t|

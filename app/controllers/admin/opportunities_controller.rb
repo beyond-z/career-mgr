@@ -24,18 +24,18 @@ class Admin::OpportunitiesController < ApplicationController
   end
   
   def mark_for_export
-    Opportunity.where(id: params[:export_ids]).update_all(export: true)
-    Opportunity.where(id: params[:skip_ids]).update_all(export: false)
+    current_user.add_export_ids(params[:export_ids])
+    current_user.remove_export_ids(params[:skip_ids])
     
-    render json: Opportunity.ready_for_export
+    render json: current_user.ready_for_export
   end
 
   def queued
-    render json: Opportunity.ready_for_export
+    render json: current_user.ready_for_export
   end
   
   def unqueue
-    Opportunity.ready_for_export.update_all(export: false)
+    current_user.remove_all_exports
     flash[:notice] = 'There are no more opportunties queued for export'
 
     redirect_to admin_opportunities_path
@@ -116,7 +116,7 @@ class Admin::OpportunitiesController < ApplicationController
     else
       @opportunities = case params[:filter]
       when 'queued'
-        @opportunities.ready_for_export
+        @opportunities.ready_for_export(user)
       when 'expired', 'published', 'employer_partner', 'inbound', 'recurring'
         @opportunities.send(params[:filter])
       else
@@ -132,7 +132,7 @@ class Admin::OpportunitiesController < ApplicationController
   end
   
   def exportable_opportunities
-    (@employer ? @employer.opportunities : Opportunity).ready_for_export.prioritized.sort_by{|o| o.application_deadline || 10.years.from_now}
+    (@employer ? @employer.opportunities : Opportunity).ready_for_export(current_user).prioritized.sort_by{|o| o.application_deadline || 10.years.from_now}
   end
   
   # Use callbacks to share common setup or constraints between actions.

@@ -13,6 +13,7 @@ class Opportunity < ApplicationRecord
   
   has_many :fellow_opportunities, dependent: :destroy
   has_many :fellows, through: :fellow_opportunities
+  has_many :opportunity_exports, dependent: :destroy
   
   taggable :industries, :interests, :majors, :industry_interests, :metros
 
@@ -30,7 +31,7 @@ class Opportunity < ApplicationRecord
   scope :recent, -> { order(created_at: :desc) }
   
   # conditional scopes
-  scope :ready_for_export, -> { where(export: true) }
+  scope :ready_for_export, -> (user) { joins(:opportunity_exports).where('opportunity_exports.user_id' => user.id) }
   scope :expired, -> { where("application_deadline < ?", Date.today) }
   scope :current, -> { where("application_deadline >= ? or application_deadline IS NULL", Date.today) }
   
@@ -43,6 +44,7 @@ class Opportunity < ApplicationRecord
   delegate :employer_partner?, to: :employer
   
   before_save :set_priority
+  after_create :queue_to_admins
   
   class << self
     def csv_headers
@@ -259,11 +261,16 @@ class Opportunity < ApplicationRecord
   end
   
   def publish!
-    update published: true, export: false
+    update published: true
   end
   
   def unpublish!
     update published: false
+    queue_to_admins
+  end
+  
+  def queue_to_admins
+    User.admin.each{|admin| admin.add_export_ids([self.id])}
   end
   
   def set_default_industries
