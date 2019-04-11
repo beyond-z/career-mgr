@@ -25,8 +25,10 @@ class Opportunity < ApplicationRecord
   validates :job_posting_url, url: {ensure_protocol: true}
   validate :validate_locateable
   
-  scope :active, -> { where("application_deadline >= ? or application_deadline IS NULL", Date.today) }
   scope :prioritized, -> { order(priority: :asc) }
+  scope :ready_for_export, -> { where(export: true) }
+  scope :expired, -> { where("application_deadline < ?", Date.today) }
+  scope :current, -> { where("application_deadline >= ? or application_deadline IS NULL", Date.today) }
   
   before_save :set_priority
   
@@ -237,7 +239,7 @@ class Opportunity < ApplicationRecord
   end
   
   def publish!
-    update published: true
+    update published: true, export: false
   end
   
   def unpublish!

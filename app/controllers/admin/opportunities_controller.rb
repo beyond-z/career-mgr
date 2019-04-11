@@ -1,4 +1,6 @@
 class Admin::OpportunitiesController < ApplicationController
+  skip_before_action :verify_authenticity_token, only: [:mark_for_export, :queued]
+  
   before_action :authenticate_user!
   before_action :ensure_admin!
   before_action :set_employer
@@ -12,13 +14,31 @@ class Admin::OpportunitiesController < ApplicationController
   def export
     respond_to do |format|
       format.csv do
-        @opportunities = unpaginated_opportunities
+        @opportunities = exportable_opportunities
         @opportunities.each(&:publish!)
     
         headers['Content-Disposition'] = "attachment; filename=\"opportunities.csv\""
         headers['Content-Type'] ||= 'text/csv'
       end
     end
+  end
+  
+  def mark_for_export
+    Opportunity.where(id: params[:export_ids]).update_all(export: true)
+    Opportunity.where(id: params[:skip_ids]).update_all(export: false)
+    
+    render json: Opportunity.ready_for_export
+  end
+
+  def queued
+    render json: Opportunity.ready_for_export
+  end
+  
+  def unqueue
+    Opportunity.ready_for_export.update_all(export: false)
+    flash[:notice] = 'There are no more opportunties queued for export'
+
+    redirect_to admin_opportunities_path
   end
 
   # GET /opportunities/1
@@ -89,15 +109,24 @@ class Admin::OpportunitiesController < ApplicationController
   
   def set_employer
     @employer = Employer.find(params[:employer_id]) if params[:employer_id]
-    @opportunities = (@employer ? @employer.opportunities : Opportunity).active.prioritized.paginate(page: params[:page])
+    @opportunities = (@employer ? @employer.opportunities : Opportunity).prioritized.paginate(page: params[:page])
     
-    unless params[:region_id].blank?
-      @opportunities = @opportunities.where(region_id: params[:region_id])
+    if params[:region_id].blank?
+      @opportunities = @opportunities.current
+    else
+      @opportunities = case params[:region_id]
+      when 'queued'
+        @opportunities.current.ready_for_export
+      when 'expired'
+        @opportunities.expired
+      else
+        @opportunities.current.where(region_id: params[:region_id])
+      end
     end
   end
   
-  def unpaginated_opportunities
-    (@employer ? @employer.opportunities : Opportunity).where(id: params[:export_ids]).prioritized.sort_by{|o| o.application_deadline || 10.years.from_now}
+  def exportable_opportunities
+    (@employer ? @employer.opportunities : Opportunity).ready_for_export.prioritized.sort_by{|o| o.application_deadline || 10.years.from_now}
   end
   
   # Use callbacks to share common setup or constraints between actions.

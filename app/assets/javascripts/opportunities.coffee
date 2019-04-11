@@ -170,7 +170,32 @@ $(document).on "turbolinks:load",  ->
     else
       $('.opportunity-checkbox').prop('checked', false)
       
+    update_export_settings()
+			
+  $('.opportunity-checkbox').change (event) ->
+    update_export_settings()
+    
+  checkbox_values = (selector) ->
+    $(selector).map(() -> $(this).val()).get().join()
+    
+  array_param = (label, selector) ->
+    $(selector).map(() -> label + '=' + $(this).val()).get()
+
+  update_export_settings = () ->
+    exports = array_param('export_ids[]', '.opportunity-checkbox:checked')
+    skips = array_param('skip_ids[]', '.opportunity-checkbox:not(:checked)')
+    data = exports.concat(skips).join('&')
+    
+    $.ajax({url: "/admin/opportunities/mark_for_export", method: 'POST', data: data, dataType: 'json', success: update_queued_opportunities})
+    
+  update_queued_opportunities = (data) ->
+    $('#export-to-csv').val('Export ' + data.length + ' Opportunities to CSV')
+    
+  reset_queued_opportunities = () ->
+    $.ajax({url: '/admin/opportunities/queued', dataType: 'json', success: update_queued_opportunities})
+      
   reset_datepicker()
   reset_removeable()
   reset_zip_match()
   reset_referral_contact()
+  reset_queued_opportunities()
