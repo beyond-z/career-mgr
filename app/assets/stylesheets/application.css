@@ -122,6 +122,7 @@ a.button:hover {
 table .edit,
 table .delete,
 table .back,
+table .status,
 .actions {
   font-size: 0.75em;
 }
@@ -145,6 +146,11 @@ table.wide {
   table-layout: auto;
 }
 
+table.wide th,
+table.wide td {
+  vertical-align: top;
+}
+
 th {
   text-align: left;
   width: 1%;
@@ -165,6 +171,14 @@ td, th {
 
 tr {
   border-bottom: 1px solid #CCC;
+}
+
+tr.sub-row {
+  border-bottom: 0;
+}
+
+td.double-row {
+  border-bottom: 1px solid #ccc;
 }
 
 tr:first-child {
@@ -707,10 +721,57 @@ input.checkbox-multiline {
   margin-right: 8px;
 }
 
+a.button-white {
+  background: white;
+  color: black;
+  border: 1px solid #ccc;
+  padding: 6px 12px;
+  font-family: DIN, "TradeGothicNo.20-CondBold", "Oswald", sans-serif;
+  text-transform: uppercase;
+  border-radius: 2px;
+  transition: background-color 0.2s ease-in-out;
+  margin-bottom: 0;
+  line-height: 1;
+  font-size: 12px;
+}
+
+a.button-white:hover {
+  background: #eee;
+  text-decoration: none;
+}
 .showpage h1 {
   margin-bottom: 0;
 }
 
 .showpage p.subheader {
 	margin-top: 0;
+}
+
+.status-checked::before {
+  content: "\2611 \00a0";
+  font-size: 1.4em;
+}
+
+.status-checked {
+  font-weight: bold;
+}
+
+.status-unchecked::before {
+  content: '\2610 \00a0';
+  font-size: 1.4em;
+}
+
+.summary {
+  width: 90%;
+  font-size: 0.8em;
+}
+
+.summary hr {
+  border-top: 1px solid #eee;
+  border-bottom: 0;
+}
+
+form.inline {
+  display: inline;
+  margin-right: 50px;
 }

@@ -17,4 +17,19 @@ module OpportunitiesHelper
       </li>
     TASK_FIELDS
   end
+  
+  def opportunity_filters
+    [
+      ['Status', [
+        ['Queued for Export', 'queued'],
+        ['Expired', 'expired'],
+        ['Published', 'published'],
+        ['Employer Partner', 'employer_partner'],
+        ['Inbound', 'inbound'],
+        ['Recurring', 'recurring']
+      ]],
+      
+      ['Region', Region.order(position: :asc).pluck(:name, :id)]
+    ]
+  end
 end

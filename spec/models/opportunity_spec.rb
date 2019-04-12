@@ -83,13 +83,13 @@ RSpec.describe Opportunity, type: :model do
   # Scopes
   ########
   
-  describe 'active' do
+  describe 'current' do
     let(:deadline_nil) { create :opportunity, application_deadline: nil }
     let(:deadline_tomorrow) { create :opportunity, application_deadline: Date.tomorrow }
     let(:deadline_today) { create :opportunity, application_deadline: Date.today }
     let(:deadline_yesterday) { create :opportunity, application_deadline: Date.yesterday }
     
-    subject { Opportunity.active }
+    subject { Opportunity.current }
     
     it { should include(deadline_nil) }
     it { should include(deadline_tomorrow) }
@@ -114,6 +114,58 @@ RSpec.describe Opportunity, type: :model do
     it { expect(subject[1]).to eq(second) }
     it { expect(subject[2]).to eq(third) }
     it { expect(subject[3]).to eq(fourth) }
+  end
+  
+  describe 'recent' do
+    let!(:newer) { create :opportunity }
+    let!(:older) { create :opportunity, created_at: 10.days.ago }
+    
+    subject { Opportunity.recent }
+    
+    it { expect(subject[0]).to eq(newer) }
+    it { expect(subject[1]).to eq(older) }
+  end
+  
+  describe 'published' do
+    let!(:published) { create :opportunity, published: true }
+    let!(:unpublished) { create :opportunity, published: false }
+    
+    subject { Opportunity.published }
+    
+    it { should include(published) }
+    it { should_not include(unpublished) }
+  end
+  
+  describe 'employer_partner' do
+    let(:partner) { create :employer, employer_partner: true }
+    let(:not_partner) { create :employer, employer_partner: false }
+    let!(:employer_partner) { create :opportunity, employer: partner }
+    let!(:not_employer_partner) { create :opportunity, employer: not_partner }
+    
+    subject { Opportunity.employer_partner }
+    
+    it { should include(employer_partner) }
+    it { should_not include(not_employer_partner) }
+  end
+  
+  describe 'inbound' do
+    let!(:inbound) { create :opportunity, inbound: true }
+    let!(:not_inbound) { create :opportunity, inbound: false }
+    
+    subject { Opportunity.inbound }
+    
+    it { should include(inbound) }
+    it { should_not include(not_inbound) }
+  end
+  
+  describe 'recurring' do
+    let!(:recurring) { create :opportunity, recurring: true }
+    let!(:not_recurring) { create :opportunity, recurring: false }
+    
+    subject { Opportunity.recurring }
+    
+    it { should include(recurring) }
+    it { should_not include(not_recurring) }
   end
   
   ###############
@@ -299,6 +351,23 @@ RSpec.describe Opportunity, type: :model do
     end
   end
   
+  describe '#employer_partner?' do
+    let(:employer) { Employer.new employer_partner: employer_partner }
+    let(:opportunity) { Opportunity.new employer: employer }
+    
+    subject { opportunity.employer_partner? }
+    
+    describe 'when employer is a partner' do
+      let(:employer_partner) { true }
+      it { should eq(true) }
+    end
+    
+    describe 'when employer is not a partner' do
+      let(:employer_partner) { false }
+      it { should eq(false) }
+    end
+  end
+  
   describe '#formatted_name' do
     let(:employer) { build :employer, name: 'ABC Employer' }
     let(:opportunity) { build :opportunity, name: 'Internship', employer: employer } 
@@ -421,41 +490,41 @@ RSpec.describe Opportunity, type: :model do
         let(:inbound) { true }
         let(:recurring) { true }
       
-        it { should eq(10) }
+        it { should eq(7) }
       end
     
       describe 'when employer_partner AND inbound' do
         let(:employer_partner) { true }
         let(:inbound) { true }
 
-        it { should eq(11) }
+        it { should eq(8) }
       end
     
       describe 'when inbound' do
         let(:inbound) { true }
-        it { should eq(12) }
+        it { should eq(9) }
       end
     
       describe 'when employer_partner AND recurring' do
         let(:employer_partner) { true }
         let(:recurring) { true }
       
-        it { should eq(13) }
+        it { should eq(10) }
       end
     
       describe 'when employer_partner' do
         let(:employer_partner) { true }
       
-        it { should eq(14) }
+        it { should eq(11) }
       end
     
       describe 'when recurring' do
         let(:recurring) { true }
-        it { should eq(15) }
+        it { should eq(12) }
       end
     
       describe 'when none are true' do
-        it { should eq(16) }
+        it { should eq(13) }
       end
     end
     

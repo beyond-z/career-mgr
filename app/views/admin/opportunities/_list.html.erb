@@ -1,26 +1,32 @@
-<%= form_tag admin_opportunities_path, method: :get, id: 'opportunity-filters' do %>
-  <%= select_tag(:region_id, options_from_collection_for_select(Region.order(position: :asc), :id, :name, params[:region_id]), include_blank: 'filter by region')%>
+<%= form_tag admin_opportunities_path, method: :get, id: 'opportunity-filters', class: 'inline' do %>
+  <%= hidden_field_tag(:sort, params[:sort]) %>
+  <%= select_tag(:filter, grouped_options_for_select(opportunity_filters, params[:filter]), include_blank: 'Unfiltered Opportunities')%>
   
   <%= submit_tag 'filter' %>
 <% end %>
 
+<%= form_tag admin_opportunities_path, method: :get, id: 'opportunity-sort', class: 'inline' do %>
+  <%= hidden_field_tag(:filter, params[:filter]) %>
+  <%= select_tag(:sort, options_for_select([['Highest Priority', 'priority'], ['Recently Added', 'recent']], params[:sort]))%>
+  
+  <%= submit_tag 'sort' %>
+<% end %>
+
 <% if opportunities.empty? %>
-  <p class="empty-list">There are no opportunties to show here.</p>
+  <p class="empty-list">There are no opportunities to show here.</p>
 <% else %>
   <%= form_tag export_admin_opportunities_path(format: 'csv'), method: :post do %>
     <table class="wide">
       <thead>
         <tr>
-          <th>Opportunity</th>
-          <th>Employer</th>
-          <th>Summary</th>
-          <th>Deadline</th>
-          <th>Published</th>
-          <th>Partner</th>
-          <th>Inbound</th>
-          <th>Recurring</th>
-          <th>Actions</th>
-          <th class="numeric" style="white-space: nowrap">
+          <th style="width: 20%;">Opportunity</th>
+          <th style="width: 20%;">Employer</th>
+          <th style="width: 10%;" class="numeric">Priority</th>
+          <th style="width: 10%;">Added</th>
+          <th style="width: 10%;">Deadline</th>
+          <th style="width: 14%;">Status</th>
+          <th style="width: 8%;">Actions</th>
+          <th class="numeric" style="white-space: nowrap; width: 8%;">
             Export <input type="checkbox" id="check-all-opportunities">
           </th>
         </tr>
@@ -28,26 +34,38 @@
 
       <tbody>
         <% opportunities.each do |opportunity| %>
-          <tr>
+          <tr class="sub-row">
             <td><%= link_to opportunity.name, admin_opportunity_path(opportunity) %></td>
-            <td><%= opportunity.employer.name %>
-            <td><%= truncate(opportunity.summary, length: 100, separator: ' ') %></td>
+            <td><%= opportunity.employer.name %></td>
+            <td class="numeric"><%= opportunity.scaled_priority %></td>
+            <td><%= date_format(opportunity.created_at) %></td>
             <td><%= date_format(opportunity.application_deadline) %></td>
-            <td class="checkmark"><%= checkmark(opportunity.published?) %></td>
-            <td class="checkmark"><%= checkmark(opportunity.employer.employer_partner) %>
-            <td class="checkmark"><%= checkmark(opportunity.inbound) %></td>
-            <td class="checkmark"><%= checkmark(opportunity.recurring) %></td>
-            <td>
+            <td rowspan="2" class="double-row status">
+              <%= status('Published',         opportunity.published?) %>
+              <%= status('Employer Partner',  opportunity.employer_partner?) %>
+              <%= status('Inbound',           opportunity.inbound?) %>
+              <%= status('Recurring',         opportunity.recurring?) %>
+            </td>
+            <td rowspan="2" class="double-row">
               <%= link_to 'Edit', edit_admin_opportunity_path(opportunity), class: 'edit' %><br/>
               <%= link_to 'Delete', admin_opportunity_path(opportunity), method: :delete, data: { confirm: 'Are you sure?' }, class: 'delete' %><br />
               <%= link_to('Unpublish', unpublish_admin_opportunity_path(opportunity), method: :put, class: 'edit') if opportunity.published? %>
             </td>
-            <td class="numeric"><%= check_box_tag 'export_ids[]', opportunity.id, !opportunity.published, class: 'opportunity-checkbox' %></td>
+            <td rowspan="2" class="double-row numeric"><%= check_box_tag 'export_ids[]', opportunity.id, current_user.export_ids.include?(opportunity.id), class: 'opportunity-checkbox' %></td>
           </tr>
+          <tr><td colspan="5">
+            <div class="summary">
+              <hr>
+              <%= truncate(opportunity.summary, length: 250, separator: ' ') %>
+            </div>
+          </td></tr>
         <% end %>
       </tbody>
     </table>
 
-    <p><%= submit_tag 'Export to CSV' %></p>
+    <p>
+      <%= submit_tag 'Export to CSV', id: 'export-to-csv' %>
+      <%= link_to 'Clear Export List', unqueue_admin_opportunities_path, class: 'button-white' %>
+    </p>
   <% end %>
 <% end %>

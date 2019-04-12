@@ -2,6 +2,7 @@ require 'taggable'
 
 class Employer < ApplicationRecord
   include Taggable
+  include PgSearch
 
   has_many :opportunities, dependent: :destroy
   has_many :locations, as: :locateable, dependent: :destroy
@@ -11,6 +12,10 @@ class Employer < ApplicationRecord
   taggable :industries
   
   accepts_nested_attributes_for :industries
+  
+  scope :alphabetical, -> { order(name: :asc) }
+  
+  pg_search_scope :search_by_name, against: :name, using: {tsearch: {any_word: true}}
 
   validates :name, presence: true, uniqueness: true
 

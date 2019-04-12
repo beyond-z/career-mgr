@@ -41,15 +41,12 @@ Rails.application.routes.draw do
     get 'home/stats'
     get 'home/new_opportunity', as: 'new_opportunity'
 
-    resources :employers, shallow: true do
-      resources :locations
-      resources :opportunities do
-        resources :candidates, only: [:index, :create, :update, :destroy]
-      end
-    end
-  
     resources :opportunities, only: [:index] do
       collection do
+        get :queued
+        get :unqueue
+
+        post :mark_for_export
         post :export
       end
       
@@ -58,6 +55,13 @@ Rails.application.routes.draw do
       end
     end
 
+    resources :employers, shallow: true do
+      resources :locations
+      resources :opportunities do
+        resources :candidates, only: [:index, :create, :update, :destroy]
+      end
+    end
+    
     resources :sites, shallow: true do
       resources :courses, except: [:index]
     end

@@ -13,6 +13,7 @@ class Opportunity < ApplicationRecord
   
   has_many :fellow_opportunities, dependent: :destroy
   has_many :fellows, through: :fellow_opportunities
+  has_many :opportunity_exports, dependent: :destroy
   
   taggable :industries, :interests, :majors, :industry_interests, :metros
 
@@ -25,10 +26,25 @@ class Opportunity < ApplicationRecord
   validates :job_posting_url, url: {ensure_protocol: true}
   validate :validate_locateable
   
-  scope :active, -> { where("application_deadline >= ? or application_deadline IS NULL", Date.today) }
+  # sorting scopes
   scope :prioritized, -> { order(priority: :asc) }
+  scope :recent, -> { order(created_at: :desc) }
+  
+  # conditional scopes
+  scope :ready_for_export, -> (user) { joins(:opportunity_exports).where('opportunity_exports.user_id' => user.id) }
+  scope :expired, -> { where("application_deadline < ?", Date.today) }
+  scope :current, -> { where("application_deadline >= ? or application_deadline IS NULL", Date.today) }
+  
+  # boolean status-based scopes
+  scope :published, -> { where(published: true) }
+  scope :employer_partner, -> { joins(:employer).where('employers.employer_partner' => true) }
+  scope :inbound, -> { where(inbound: true) }
+  scope :recurring, -> { where(recurring: true) }
+  
+  delegate :employer_partner?, to: :employer
   
   before_save :set_priority
+  after_create :queue_to_admins
   
   class << self
     def csv_headers
@@ -231,9 +247,17 @@ class Opportunity < ApplicationRecord
       6
     end
     
-    value += 10 if published?
+    value += 7 if published?
     
     value
+  end
+  
+  def max_priority
+    13
+  end
+  
+  def scaled_priority
+    ((max_priority - calculated_priority) * max_priority / 10).to_i + 1
   end
   
   def publish!
@@ -242,6 +266,11 @@ class Opportunity < ApplicationRecord
   
   def unpublish!
     update published: false
+    queue_to_admins
+  end
+  
+  def queue_to_admins
+    User.admin.each{|admin| admin.add_export_ids([self.id])}
   end
   
   def set_default_industries
