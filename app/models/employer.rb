@@ -14,7 +14,7 @@ class Employer < ApplicationRecord
   accepts_nested_attributes_for :industries
   
   scope :alphabetical, -> { order(name: :asc) }
-  scope :search_by_name, -> query { where("name ilike ?", "%#{query}%").order(name: :asc) }
+  scope :search_by_name, -> query { where("name ilike ?", "%#{query}%").alphabetical }
 
   validates :name, presence: true, uniqueness: true
 

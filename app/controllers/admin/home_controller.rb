@@ -50,7 +50,7 @@ class Admin::HomeController < ApplicationController
       # We have to sort post-query to override pg_search's relevancy sorting
       Employer.search_by_name(params[:q])
     else
-      []
+      Employer.alphabetical
     end
   end
 end
