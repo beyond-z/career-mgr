@@ -48,7 +48,7 @@ class Opportunity < ApplicationRecord
   
   class << self
     def csv_headers
-      ['Region', 'Employer', 'Position', 'Type', 'Referral Contact', 'Location', 'Link', 'Employer Partner', 'Inbound', 'Recurring', 'Interests']
+      ['Region', 'Employer', 'Position', 'Type', 'Referral Contact', 'Locations', 'Link', 'Employer Partner', 'Inbound', 'Recurring', 'Interests']
     end
   end
   
@@ -211,20 +211,15 @@ class Opportunity < ApplicationRecord
   end
   
   def primary_city_state
-    if metros.first
-      metro_name = metros.first.name
-      
-      city, state = metro_name.split(/,\s+/)
-    
-      return metro_name unless state
-      primary_state, secondary_state = state.split('-', 2)
-    
-      [city, primary_state].join(', ')
+    location_labels = if metros.empty?
+      locations.map do |location|
+        [location.contact.city, location.contact.state].join(', ')
+      end
     else
-      contact = locations.first.contact
-      
-      [contact.city, contact.state].join(', ')
+      metros.map(&:label)
     end
+    
+    location_labels.uniq.join('; ')
   end
   
   # lowest priority is best/first
