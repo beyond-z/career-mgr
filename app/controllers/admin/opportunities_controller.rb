@@ -16,6 +16,8 @@ class Admin::OpportunitiesController < ApplicationController
       format.csv do
         @opportunities = exportable_opportunities
         @opportunities.each(&:publish!)
+        
+        current_user.remove_all_exports
     
         headers['Content-Disposition'] = "attachment; filename=\"opportunities.csv\""
         headers['Content-Type'] ||= 'text/csv'
