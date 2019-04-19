@@ -116,7 +116,7 @@ class Admin::OpportunitiesController < ApplicationController
     else
       @opportunities = case params[:filter]
       when 'queued'
-        @opportunities.ready_for_export(user)
+        @opportunities.ready_for_export(current_user)
       when 'expired', 'published', 'employer_partner', 'inbound', 'recurring'
         @opportunities.send(params[:filter])
       else
