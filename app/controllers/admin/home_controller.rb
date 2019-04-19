@@ -48,7 +48,7 @@ class Admin::HomeController < ApplicationController
   def new_opportunity
     @employers = if params[:q]
       # We have to sort post-query to override pg_search's relevancy sorting
-      Employer.search_by_name(params[:q]).sort_by(&:name)
+      Employer.search_by_name(params[:q])
     else
       []
     end
