@@ -10,6 +10,7 @@ RSpec.describe User, type: :model do
   it { should have_one :fellow }
   
   it { should have_many :opportunity_exports }
+  it { should belong_to :region }
 
   #############
   # Validations

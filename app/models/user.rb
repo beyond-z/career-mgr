@@ -6,6 +6,8 @@ class User < ApplicationRecord
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :trackable, :validatable
          
+  belongs_to :region, required: false
+         
   has_one :fellow
   
   has_many :opportunity_exports

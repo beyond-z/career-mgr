@@ -6,6 +6,7 @@ RSpec.describe Region, type: :model do
   ##############
 
   it { should have_many :opportunities }
+  it { should have_many :users }
   
   #############
   # Validations

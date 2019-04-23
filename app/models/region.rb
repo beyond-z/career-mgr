@@ -1,5 +1,6 @@
 class Region < ApplicationRecord
   has_many :opportunities
+  has_many :users
   
   validates :name, :position, presence: true, uniqueness: true
   
