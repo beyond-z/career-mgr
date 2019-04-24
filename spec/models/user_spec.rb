@@ -113,4 +113,25 @@ RSpec.describe User, type: :model do
       it { expect(subject).to eq(nil) }
     end
   end
+  
+  describe '#full_name' do
+    let(:first_name) { 'Bob' }
+    let(:last_name) { 'Smith' }
+    
+    subject { build(:user, first_name: first_name, last_name: last_name).full_name }
+    
+    describe 'when first and last name exist' do
+      it { should eq('Bob Smith')}
+    end
+    
+    describe 'when first name is missing' do
+      let(:first_name) { nil }
+      it { should eq('Smith') }
+    end
+    
+    describe 'when last name is missing' do
+      let(:last_name) { nil }
+      it { should eq('Bob') }
+    end
+  end
 end

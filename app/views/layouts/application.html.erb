@@ -30,6 +30,7 @@
               <li><%= nav_link "Interests", admin_interests_path %> (<%= Interest.count %>)</li>
               <li><%= nav_link "Sites", admin_sites_path %> (<%= Site.count %>)</li>
               <li><%= nav_link "Fellows", admin_fellows_path %> (<%= Fellow.count %>)</li>
+              <li><%= nav_link "Profile", admin_profile_path %></li>
             <% elsif current_user.is_fellow? %>
               <li><%= nav_link "Dashboard", fellow_home_welcome_path %></li>
               <li><%= nav_link "Profile", fellow_profile_path %></li>

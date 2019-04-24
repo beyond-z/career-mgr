@@ -17,6 +17,10 @@ class User < ApplicationRecord
   
   scope :admin, -> { where(is_admin: true) }
   
+  def full_name
+    [first_name, last_name].join(' ').strip
+  end
+  
   def role
     if is_admin?
       :admin

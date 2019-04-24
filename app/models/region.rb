@@ -4,6 +4,8 @@ class Region < ApplicationRecord
   
   validates :name, :position, presence: true, uniqueness: true
   
+  scope :by_position, -> { order(position: :asc) }
+  
   class << self
     def types
       return @types if defined?(@types)
