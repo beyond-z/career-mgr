@@ -44,7 +44,7 @@ class Opportunity < ApplicationRecord
   delegate :employer_partner?, to: :employer
   
   before_save :set_priority
-  after_create :queue_to_admins
+  after_create :queue_to_subscribed
   
   class << self
     def csv_headers
@@ -261,11 +261,11 @@ class Opportunity < ApplicationRecord
   
   def unpublish!
     update published: false
-    queue_to_admins
+    queue_to_subscribed
   end
   
-  def queue_to_admins
-    User.admin.each{|admin| admin.add_export_ids([self.id])}
+  def queue_to_subscribed
+    User.admin.where(region_id: region.id).each{|admin| admin.add_export_ids([self.id])}
   end
   
   def set_default_industries
