@@ -783,3 +783,8 @@ form.inline {
 .filter-range {
   margin-top: 20px;
 }
+
+.employment-status {
+  width: 30%; 
+  display: inline-block;
+}

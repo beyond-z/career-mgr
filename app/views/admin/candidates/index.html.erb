@@ -29,7 +29,7 @@
     <div id="filter-employment-status">
       <% EmploymentStatus.order(position: :asc).pluck(:id, :name).each_slice(3) do |slice| %>
         <% slice.each do |id, name| %>
-          <div style="width: 30%; display: inline-block;">
+          <div class="employment-status">
             <% tag_id = "employment_status_#{id}" %>
             <% checked = params[:search].nil? || params[:search][:employment_statuses].nil? || params[:search][:employment_statuses].include?(id.to_s) %>
       
