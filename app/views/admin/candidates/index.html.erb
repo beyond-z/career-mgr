@@ -26,13 +26,20 @@
   <div id="advanced-search">
     <h3>Candidate's Current Employment Status</h3>
     
-    <% EmploymentStatus.order(position: :asc).pluck(:id, :name).each do |id, name| %>
-      <% tag_id = "employment_status_#{id}" %>
-      <% checked = params[:search].nil? || params[:search][:employment_statuses].nil? || params[:search][:employment_statuses].include?(id.to_s) %>
+    <div>
+      <% EmploymentStatus.order(position: :asc).pluck(:id, :name).each_slice(3) do |slice| %>
+        <% slice.each do |id, name| %>
+          <div style="width: 30%; display: inline-block;">
+            <% tag_id = "employment_status_#{id}" %>
+            <% checked = params[:search].nil? || params[:search][:employment_statuses].nil? || params[:search][:employment_statuses].include?(id.to_s) %>
       
-      <%= check_box_tag 'search[employment_statuses][]', id, checked, id: tag_id %>
-      <%= label_tag tag_id, name, class: 'checkbox' %>
-    <% end %>
+            <%= check_box_tag 'search[employment_statuses][]', id, checked, id: tag_id %>
+            <%= label_tag tag_id, name, class: 'checkbox' %>
+          </div>
+        <% end %>
+        <br>
+      <% end %>
+    </div>
     
     <p><%= submit_tag 'Search' %></p>
     
