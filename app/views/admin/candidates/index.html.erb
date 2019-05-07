@@ -26,7 +26,7 @@
   <div id="advanced-search">
     <h3>Candidate's Current Employment Status</h3>
     
-    <div>
+    <div id="filter-employment-status">
       <% EmploymentStatus.order(position: :asc).pluck(:id, :name).each_slice(3) do |slice| %>
         <% slice.each do |id, name| %>
           <div style="width: 30%; display: inline-block;">
@@ -39,6 +39,28 @@
         <% end %>
         <br>
       <% end %>
+    </div>
+    
+    <div id="filter-graduation_year" style="margin-top: 20px;">
+      <h3>Graduation Year</h3>
+      
+      <p>
+        from:
+        <%= text_field_tag "search[graduation_year][from]", params.dig(:search, :graduation_year, :from), size: 4, style: 'margin-right: 20px;' %>
+        to:
+        <%= text_field_tag "search[graduation_year][to]", params.dig(:search, :graduation_year, :to), size: 4, style: 'margin-right: 20px;'  %>
+      </p>
+    </div>
+    
+    <div id="filter-gpa" style="margin-top: 20px;">
+      <h3>GPA</h3>
+      
+      <p>
+        from:
+        <%= text_field_tag "search[gpa][from]", params.dig(:search, :gpa, :from), size: 4, style: 'margin-right: 20px;' %>
+        to:
+        <%= text_field_tag "search[gpa][to]", params.dig(:search, :gpa, :to), size: 4, style: 'margin-right: 20px;'  %>
+      </p>
     </div>
     
     <p><%= submit_tag 'Search' %></p>

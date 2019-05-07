@@ -77,17 +77,17 @@ class Opportunity < ApplicationRecord
     end
     
     # filter by graduation year
-    if search_params[:graduation_year] && (search_params[:graduation_year][:from] || search_params[:graduation_year][:to])
-      from = (search_params[:graduation_year][:from] || 1900).to_i
-      to   = (search_params[:graduation_year][:to] || 3000).to_i
+    if search_params[:graduation_year] && (search_params[:graduation_year][:from].present? || search_params[:graduation_year][:to].present?)
+      from = (search_params[:graduation_year][:from].present? ? search_params[:graduation_year][:from] : 1900).to_i
+      to   = (search_params[:graduation_year][:to].present? ? search_params[:graduation_year][:to] : 3000).to_i
       
       candidate_ids &= fellow_ids_for_graduation_years(from, to)
     end
     
     # filter by GPA
-    if search_params[:gpa] && (search_params[:gpa][:from] || search_params[:gpa][:to])
-      from = (search_params[:gpa][:from] || -1.0).to_f
-      to   = (search_params[:gpa][:to] || 100.0).to_f
+    if search_params[:gpa] && (search_params[:gpa][:from].present? || !search_params[:gpa][:to].present?)
+      from = (search_params[:gpa][:from].present? ? search_params[:gpa][:from] : -1.0).to_f
+      to   = (search_params[:gpa][:to].present? ? search_params[:gpa][:to] : 100.0).to_f
       
       candidate_ids &= fellow_ids_for_gpas(from, to)
     end
