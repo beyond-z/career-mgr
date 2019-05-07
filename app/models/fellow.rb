@@ -8,6 +8,17 @@ class Fellow < ApplicationRecord
   acts_as_paranoid
   include Taggable
   include PgSearch
+  
+  GRADUATION_SEMESTER_ORDER = {
+    nil       => 0,
+    'Q3'      => 1,
+    'Q4'      => 2,
+    'Spring'  => 2, 
+    'Summer'  => 3,
+    'Q1'      => 4,
+    'Q2'      => 5,
+    'Fall'    => 5,
+  }
 
   has_one :contact, as: :contactable, dependent: :destroy
   accepts_nested_attributes_for :contact
@@ -132,6 +143,18 @@ class Fellow < ApplicationRecord
   
   def graduation
     [graduation_semester, graduation_year].join(' ').strip
+  end
+  
+  def graduation_sort_order
+    semester_index = GRADUATION_SEMESTER_ORDER[graduation_semester]
+    
+    if semester_index
+      semester_index += 1
+    else
+      semester_index = 0
+    end
+    
+    (graduation_year || 0) * 100 + semester_index
   end
   
   def nearest_distance zip_list
