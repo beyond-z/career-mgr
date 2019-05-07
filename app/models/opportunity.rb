@@ -75,6 +75,14 @@ class Opportunity < ApplicationRecord
     unless search_params[:metros] == ''
       candidate_ids &= fellow_ids_for_metros(search_params[:metros])
     end
+    
+    # filter by graduation year
+    if search_params[:graduation_year] && (search_params[:graduation_year][:from] || search_params[:graduation_year][:to])
+      from = (search_params[:graduation_year][:from] || 1900).to_i
+      to   = (search_params[:graduation_year][:to] || 3000).to_i
+      
+      candidate_ids &= fellow_ids_for_graduation_years(from, to)
+    end
 
     candidate_ids.uniq!
     
@@ -86,6 +94,10 @@ class Opportunity < ApplicationRecord
   
   def formatted_name
     [employer.name, name].join(' - ')
+  end
+  
+  def fellow_ids_for_graduation_years from, to
+    Fellow.where("graduation_year >= ? and graduation_year <= ?", from, to).pluck(:id)
   end
   
   def fellow_ids_for_employment_statuses employment_status_ids
