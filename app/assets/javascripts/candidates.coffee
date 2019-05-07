@@ -70,10 +70,10 @@ $(document).on "turbolinks:load",  ->
     
   set_advanced_search_visibility = () ->
     if $('#advanced-search-toggle').length > 0
+      text_field_names = ['search[gpa][from]', 'search[gpa][from]', 'search[graduation_year][from]', 'search[graduation_year][from]']
+      
       # if any advanced fields have been altered, show advanced options
-      if has_unchecked_boxes('search[employment_statuses][]') or
-      has_input('search[gpa][from]') or has_input('search[gpa][to]') or
-      has_input('search[graduation_year][from]') or has_input('search[graduation_year][to]')
+      if has_unchecked_boxes('search[employment_statuses][]') or text_field_names.some(has_input)
         show_advanced_search()
     
   set_advanced_search_visibility()
