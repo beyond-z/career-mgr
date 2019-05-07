@@ -33,7 +33,10 @@ class Admin::OpportunitiesController < ApplicationController
   end
 
   def queued
-    render json: current_user.ready_for_export
+    respond_to do |format|
+      format.json { render json: current_user.ready_for_export }
+      format.html { redirect_to admin_opportunities_path }
+    end
   end
   
   def unqueue
