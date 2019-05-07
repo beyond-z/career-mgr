@@ -83,6 +83,14 @@ class Opportunity < ApplicationRecord
       
       candidate_ids &= fellow_ids_for_graduation_years(from, to)
     end
+    
+    # filter by GPA
+    if search_params[:gpa] && (search_params[:gpa][:from] || search_params[:gpa][:to])
+      from = (search_params[:gpa][:from] || -1.0).to_f
+      to   = (search_params[:gpa][:to] || 100.0).to_f
+      
+      candidate_ids &= fellow_ids_for_gpas(from, to)
+    end
 
     candidate_ids.uniq!
     
@@ -98,6 +106,10 @@ class Opportunity < ApplicationRecord
   
   def fellow_ids_for_graduation_years from, to
     Fellow.where("graduation_year >= ? and graduation_year <= ?", from, to).pluck(:id)
+  end
+  
+  def fellow_ids_for_gpas from, to
+    Fellow.where("gpa >= ? and gpa <= ?", from, to).pluck(:id)
   end
   
   def fellow_ids_for_employment_statuses employment_status_ids
