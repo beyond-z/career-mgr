@@ -44,11 +44,11 @@ class Opportunity < ApplicationRecord
   delegate :employer_partner?, to: :employer
   
   before_save :set_priority
-  after_create :queue_to_admins
+  after_create :queue_to_subscribed
   
   class << self
     def csv_headers
-      ['Region', 'Employer', 'Position', 'Type', 'Referral Contact', 'Location', 'Link', 'Employer Partner', 'Inbound', 'Recurring', 'Interests']
+      ['Region', 'Employer', 'Position', 'Type', 'Referral Contact', 'Locations', 'Link', 'Employer Partner', 'Inbound', 'Recurring', 'Interests']
     end
   end
   
@@ -75,6 +75,22 @@ class Opportunity < ApplicationRecord
     unless search_params[:metros] == ''
       candidate_ids &= fellow_ids_for_metros(search_params[:metros])
     end
+    
+    # filter by graduation year
+    if search_params[:graduation_year] && (search_params[:graduation_year][:from].present? || search_params[:graduation_year][:to].present?)
+      from = (search_params[:graduation_year][:from].present? ? search_params[:graduation_year][:from] : 1900).to_i
+      to   = (search_params[:graduation_year][:to].present? ? search_params[:graduation_year][:to] : 3000).to_i
+      
+      candidate_ids &= fellow_ids_for_graduation_years(from, to)
+    end
+    
+    # filter by GPA
+    if search_params[:gpa] && (search_params[:gpa][:from].present? || !search_params[:gpa][:to].present?)
+      from = (search_params[:gpa][:from].present? ? search_params[:gpa][:from] : -1.0).to_f
+      to   = (search_params[:gpa][:to].present? ? search_params[:gpa][:to] : 100.0).to_f
+      
+      candidate_ids &= fellow_ids_for_gpas(from, to)
+    end
 
     candidate_ids.uniq!
     
@@ -86,6 +102,14 @@ class Opportunity < ApplicationRecord
   
   def formatted_name
     [employer.name, name].join(' - ')
+  end
+  
+  def fellow_ids_for_graduation_years from, to
+    Fellow.where("graduation_year >= ? and graduation_year <= ?", from, to).pluck(:id)
+  end
+  
+  def fellow_ids_for_gpas from, to
+    Fellow.where("gpa >= ? and gpa <= ?", from, to).pluck(:id)
   end
   
   def fellow_ids_for_employment_statuses employment_status_ids
@@ -211,20 +235,15 @@ class Opportunity < ApplicationRecord
   end
   
   def primary_city_state
-    if metros.first
-      metro_name = metros.first.name
-      
-      city, state = metro_name.split(/,\s+/)
-    
-      return metro_name unless state
-      primary_state, secondary_state = state.split('-', 2)
-    
-      [city, primary_state].join(', ')
+    location_labels = if metros.empty?
+      locations.map do |location|
+        [location.contact.city, location.contact.state].join(', ')
+      end
     else
-      contact = locations.first.contact
-      
-      [contact.city, contact.state].join(', ')
+      metros.map(&:label)
     end
+    
+    location_labels.uniq.join('; ')
   end
   
   # lowest priority is best/first
@@ -266,11 +285,11 @@ class Opportunity < ApplicationRecord
   
   def unpublish!
     update published: false
-    queue_to_admins
+    queue_to_subscribed
   end
   
-  def queue_to_admins
-    User.admin.each{|admin| admin.add_export_ids([self.id])}
+  def queue_to_subscribed
+    User.admin.where(region_id: region.id).each{|admin| admin.add_export_ids([self.id])}
   end
   
   def set_default_industries

@@ -41,6 +41,8 @@ Rails.application.routes.draw do
     get 'home/stats'
     get 'home/new_opportunity', as: 'new_opportunity'
 
+    resource :profile, only: [:show, :edit, :update]
+
     resources :opportunities, only: [:index] do
       collection do
         get :queued

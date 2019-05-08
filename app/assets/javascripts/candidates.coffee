@@ -44,14 +44,36 @@ $(document).on "turbolinks:load",  ->
     event.preventDefault()
     
     if /show/.test($(this).text())
-      $(this).text('- hide advanced search')
-      $('#advanced-search').show();
+      show_advanced_search()
     else
-      $(this).text('+ show advanced search')
-      $('#advanced-search').hide();
+      hide_advanced_search()
 
   $('input[type=checkbox]#check-all-candidates').click (event) ->
     if $(this).is(':checked')
       $('.candidate-checkbox').prop('checked', true)
     else
       $('.candidate-checkbox').prop('checked', false)
+      
+  hide_advanced_search = () ->
+    $('#advanced-search-toggle a').text('+ show advanced search')
+    $('#advanced-search').hide();
+
+  show_advanced_search = () ->
+    $('#advanced-search-toggle a').text('- hide advanced search')
+    $('#advanced-search').show();
+      
+  has_input = (name) ->
+    !!($('input[name="' + name + '"]').val().length > 0)
+    
+  has_unchecked_boxes = (name) ->
+    !!($('input[name="' + name + '"]:not(:checked)').length > 0)
+    
+  set_advanced_search_visibility = () ->
+    if $('#advanced-search-toggle').length > 0
+      text_field_names = ['search[gpa][from]', 'search[gpa][from]', 'search[graduation_year][from]', 'search[graduation_year][from]']
+      
+      # if any advanced fields have been altered, show advanced options
+      if has_unchecked_boxes('search[employment_statuses][]') or text_field_names.some(has_input)
+        show_advanced_search()
+    
+  set_advanced_search_visibility()

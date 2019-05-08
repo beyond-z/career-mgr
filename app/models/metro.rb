@@ -38,6 +38,15 @@ class Metro < ApplicationRecord
     end
   end
   
+  def label
+    city, state = name.split(/,\s+/)
+
+    return name unless state
+    
+    primary_state, secondary_state = state.split('-', 2)
+    [city, primary_state].join(', ')
+  end
+  
   def states
     city, state_list = name.split(/,\s*/)
     return [] if state_list.nil?
