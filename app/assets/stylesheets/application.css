@@ -775,3 +775,16 @@ form.inline {
   display: inline;
   margin-right: 50px;
 }
+
+.range-input {
+  margin-right: 20px;
+}
+
+.filter-range {
+  margin-top: 20px;
+}
+
+.employment-status {
+  width: 30%; 
+  display: inline-block;
+}

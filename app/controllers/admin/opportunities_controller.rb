@@ -16,6 +16,8 @@ class Admin::OpportunitiesController < ApplicationController
       format.csv do
         @opportunities = exportable_opportunities
         @opportunities.each(&:publish!)
+        
+        current_user.remove_all_exports
     
         headers['Content-Disposition'] = "attachment; filename=\"opportunities.csv\""
         headers['Content-Type'] ||= 'text/csv'
@@ -31,7 +33,10 @@ class Admin::OpportunitiesController < ApplicationController
   end
 
   def queued
-    render json: current_user.ready_for_export
+    respond_to do |format|
+      format.json { render json: current_user.ready_for_export }
+      format.html { redirect_to admin_opportunities_path }
+    end
   end
   
   def unqueue

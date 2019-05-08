@@ -349,6 +349,36 @@ RSpec.describe Fellow, type: :model do
     end
   end
   
+  describe '#graduation_sort_order' do
+    it 'orders Spring 2018 before Fall 2018' do
+      spring = Fellow.new graduation_year: 2018, graduation_semester: 'Spring'
+      fall = Fellow.new graduation_year: 2018, graduation_semester: 'Fall'
+      
+      expect(spring.graduation_sort_order).to be < fall.graduation_sort_order
+    end
+    
+    it 'orders 2018 before 2019' do
+      older = Fellow.new graduation_year: 2018
+      newer = Fellow.new graduation_year: 2019
+      
+      expect(older.graduation_sort_order).to be < newer.graduation_sort_order
+    end
+    
+    it "orders a missing year before a valid year" do
+      missing = Fellow.new graduation_year: nil, graduation_semester: 'Spring'
+      valid = Fellow.new graduation_year: 1905, graduation_semester: 'Spring'
+      
+      expect(missing.graduation_sort_order).to be < valid.graduation_sort_order
+    end
+    
+    it 'orders a missing semester before a valid semester' do
+      missing = Fellow.new graduation_year: 2018, graduation_semester: nil
+      valid = Fellow.new graduation_year: 2018, graduation_semester: 'Spring'
+      
+      expect(missing.graduation_sort_order).to be < valid.graduation_sort_order
+    end
+  end
+  
   describe '#default_metro' do
     let(:metro) { create :metro, code: 'LNK' }
     let(:postal_code) { create :postal_code, msa_code: metro.code }

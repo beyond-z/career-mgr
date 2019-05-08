@@ -6,6 +6,8 @@ class User < ApplicationRecord
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :trackable, :validatable
          
+  belongs_to :region, required: false
+         
   has_one :fellow
   
   has_many :opportunity_exports
@@ -14,6 +16,10 @@ class User < ApplicationRecord
   after_save :attempt_fellow_match, if: :missing_fellow?
   
   scope :admin, -> { where(is_admin: true) }
+  
+  def full_name
+    [first_name, last_name].join(' ').strip
+  end
   
   def role
     if is_admin?

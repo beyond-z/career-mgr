@@ -175,6 +175,11 @@ $(document).on "turbolinks:load",  ->
   $('.opportunity-checkbox').change (event) ->
     update_export_settings()
     
+    
+  $('#export-to-csv').click (event) ->
+    callback = -> location.reload()
+    setTimeout callback, 1000
+    
   checkbox_values = (selector) ->
     $(selector).map(() -> $(this).val()).get().join()
     
