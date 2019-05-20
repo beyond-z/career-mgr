@@ -29,6 +29,8 @@ class HomeController < ApplicationController
       url="#{Rails.application.secrets.sso_url}login?service=#{service}"
     end
 
+    session[:service_signout_url] = url.gsub(/login/, 'logout')
+
     Rails.logger.info("SSO_URL: #{url}")
     redirect_to url
     #redirect_to session.delete(:last)

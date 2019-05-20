@@ -10,4 +10,17 @@ class SessionsController < Devise::SessionsController
       redirect_to new_sso_user_session_path
     end
   end
+  
+  def destroy
+    url = if session[:service_signout_url]
+      session[:service_signout_url]
+    else
+      service = URI.encode("#{request.base_url}/users/service_braven", /[^\-_!~*'()a-zA-Z\d;?@&=+$,\[\]]/)
+      "#{Rails.application.secrets.sso_url}logout?service=#{service}"
+    end
+    
+    reset_session
+
+    redirect_to url
+  end
 end

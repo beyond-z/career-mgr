@@ -15,6 +15,7 @@ Rails.application.routes.draw do
   get 'home/welcome'
   get 'health_check', to: 'home#health_check'
   get 'login', to: 'home#login'
+  post 'logout', to: 'home#logout'
   get 'sso/:id', to: 'home#sso', as: 'sso'
   get 'token/:id', to: 'token#show', as: 'token'
 
