@@ -11,7 +11,7 @@ gem 'pg_search'
 
 group :development, :test do
   # Use Puma as the app server
-  gem 'puma', '~> 3.11'
+  gem 'puma', '~> 5.6'
 end
 
 group :production do
